@@ -363,7 +363,7 @@
 
     <p>Above two figures are quite messy. We can notice that the data have different range, which means that we may have to worry about NAs. Moreover, most of the series do not steady in the given range. For these five curves, the curves are more steady after April 2016. Then, above series are plotted into separated panels as follows:</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">p</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="n">ggplot</span><span class="p">(</span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="m">6</span><span class="p">),</span><span class="n">aes</span><span class="p">(</span><span class="n">time_stamp</span><span class="p">,</span><span class="n">nb_pay</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">p</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ggplot</span><span class="p">(</span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">&lt;</span><span class="m">6</span><span class="p">),</span><span class="n">aes</span><span class="p">(</span><span class="n">time_stamp</span><span class="p">,</span><span class="n">nb_pay</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
   </span><span class="n">geom_line</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w">
   </span><span class="n">facet_wrap</span><span class="p">(</span><span class="o">~</span><span class="n">shop_id</span><span class="p">,</span><span class="w"> </span><span class="n">ncol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">scales</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"free"</span><span class="p">)</span><span class="w">
 </span><span class="n">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span></code></pre></figure>
@@ -372,13 +372,13 @@
 
     <p>Some series have strong seasonal feature, such as curve for <code class="highlighter-rouge">shop_id==4</code>. We may need to consider the seasonal effect. A quick <code class="highlighter-rouge">acf</code> drawing is shown as below:</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">acf</span><span class="p">((</span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">==</span><span class="m">4</span><span class="p">))</span><span class="o">$</span><span class="n">nb_pay</span><span class="p">)</span></code></pre></figure>
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">acf</span><span class="p">((</span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">==</span><span class="m">4</span><span class="p">))</span><span class="o">$</span><span class="n">nb_pay</span><span class="p">)</span></code></pre></figure>
 
     <p><img src="/images/dplyrpar/unnamed-chunk-3-1.png" alt="" /></p>
 
     <p>It can be observed that the periodic pattern is quite clear, the period is 7 and it is the length of one week. Therefore, we plot the data against the weekday:</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">p</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="n">ggplot</span><span class="p">(</span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">==</span><span class="m">4</span><span class="p">),</span><span class="w">
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">p</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ggplot</span><span class="p">(</span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">==</span><span class="m">4</span><span class="p">),</span><span class="w">
             </span><span class="n">aes</span><span class="p">(</span><span class="n">time_stamp</span><span class="p">,</span><span class="n">nb_pay</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
   </span><span class="n">geom_line</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> 
   </span><span class="n">facet_grid</span><span class="p">(</span><span class="n">date_week</span><span class="o">~</span><span class="n">.</span><span class="p">,</span><span class="n">scales</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"fixed"</span><span class="p">)</span><span class="o">+</span><span class="w">
@@ -389,7 +389,7 @@
 
     <p>It is shown in above figure, the number of customs is much steady when we investigate the flow on the same weekday. This pattern also appears in the data of other shops.</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">p</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="n">ggplot</span><span class="p">(</span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="m">6</span><span class="p">),</span><span class="w">
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">p</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ggplot</span><span class="p">(</span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">&lt;</span><span class="m">6</span><span class="p">),</span><span class="w">
             </span><span class="n">aes</span><span class="p">(</span><span class="n">time_stamp</span><span class="p">,</span><span class="n">nb_pay</span><span class="p">,</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">date_week</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
   </span><span class="n">geom_line</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> 
   </span><span class="n">facet_grid</span><span class="p">(</span><span class="n">date_week</span><span class="o">~</span><span class="n">shop_id</span><span class="p">,</span><span class="n">scales</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"free"</span><span class="p">)</span><span class="o">+</span><span class="w">
@@ -405,11 +405,11 @@
 
     <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">library</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">xts</span><span class="p">)</span><span class="w">
-</span><span class="n">to.ts</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="n">to.ts</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
   </span><span class="n">ts</span><span class="p">(</span><span class="n">x</span><span class="o">$</span><span class="n">nb_pay</span><span class="p">,</span><span class="n">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">)</span><span class="w">
 </span><span class="p">}</span><span class="w">
 
-</span><span class="n">tmp</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="n">to.ts</span><span class="p">(</span><span class="n">tc2017</span><span class="o">%&amp;gt;%</span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">==</span><span class="m">1</span><span class="p">))</span><span class="w">
+</span><span class="n">tmp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">to.ts</span><span class="p">(</span><span class="n">tc2017</span><span class="o">%&gt;%</span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">==</span><span class="m">1</span><span class="p">))</span><span class="w">
 
 </span><span class="n">autoplot</span><span class="p">(</span><span class="n">forecast</span><span class="p">(</span><span class="n">stlm</span><span class="p">(</span><span class="n">tmp</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">theme_bw</span><span class="p">()</span></code></pre></figure>
 
@@ -427,7 +427,7 @@
 
     <p><img src="/images/dplyrpar/unnamed-chunk-6-4.png" alt="" /> How about <code class="highlighter-rouge">shope_id==4</code>:</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">tmp</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="n">to.ts</span><span class="p">(</span><span class="n">tc2017</span><span class="o">%&amp;gt;%</span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">==</span><span class="m">4</span><span class="p">))</span><span class="w">
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">tmp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">to.ts</span><span class="p">(</span><span class="n">tc2017</span><span class="o">%&gt;%</span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">==</span><span class="m">4</span><span class="p">))</span><span class="w">
 
 </span><span class="n">autoplot</span><span class="p">(</span><span class="n">forecast</span><span class="p">(</span><span class="n">stlm</span><span class="p">(</span><span class="n">tmp</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">theme_bw</span><span class="p">()</span></code></pre></figure>
 
@@ -451,12 +451,12 @@
 
     <p><code class="highlighter-rouge">ets</code> is a fast algorithm, and its performance is quite good. Therefore, let’s assume we want to apply <code class="highlighter-rouge">ets</code> to the whole dataset. The easiest way is to use some functions from <code class="highlighter-rouge">dplyr</code>. <code class="highlighter-rouge">summarise</code> is a good candidate, but it only able to capture functions with only one return value, such as <code class="highlighter-rouge">mean</code> and <code class="highlighter-rouge">median</code>:</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">tc2017</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w"> </span><span class="n">group_by</span><span class="p">(</span><span class="n">shop_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w">
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">tc2017</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">group_by</span><span class="p">(</span><span class="n">shop_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
   </span><span class="n">summarise</span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">nb_pay</span><span class="p">),</span><span class="n">median</span><span class="p">(</span><span class="n">nb_pay</span><span class="p">))</span><span class="w"> </span></code></pre></figure>
 
     <div class="highlighter-rouge"><pre class="highlight"><code>## # A tibble: 2,000 × 3
 ##    shop_id `mean(nb_pay)` `median(nb_pay)`
-##      &amp;lt;int&amp;gt;          &amp;lt;dbl&amp;gt;            &amp;lt;dbl&amp;gt;
+##      &lt;int&gt;          &lt;dbl&gt;            &lt;dbl&gt;
 ## 1        1      239.50646              228
 ## 2        2      118.87538               92
 ## 3        3       76.97794               74
@@ -473,7 +473,9 @@
 
     <p>So, we need a general version of <code class="highlighter-rouge">summarise</code>, and what we get is <code class="highlighter-rouge">do</code>:</p>
 
-    <p>&gt; This is a general purpose complement to the specialised manipulation functions filter, select, mutate, summarise and arrange. You can use do to perform arbitrary computation, returning either a data frame or arbitrary objects which will be stored in a list. This is particularly useful when working with models: you can fit models per group with do and then flexibly extract components with either another do or summarise.</p>
+    <blockquote>
+      <p>This is a general purpose complement to the specialised manipulation functions filter, select, mutate, summarise and arrange. You can use do to perform arbitrary computation, returning either a data frame or arbitrary objects which will be stored in a list. This is particularly useful when working with models: you can fit models per group with do and then flexibly extract components with either another do or summarise.</p>
+    </blockquote>
 
     <p>Here is where most people get stuck, because the first example of this function is something like:</p>
 
@@ -483,7 +485,7 @@
 ## Groups: shop_id [2,000]
 ## 
 ##    shop_id time_stamp date_week nb_pay
-##      &amp;lt;int&amp;gt;     &amp;lt;date&amp;gt;    &amp;lt;fctr&amp;gt;  &amp;lt;int&amp;gt;
+##      &lt;int&gt;     &lt;date&gt;    &lt;fctr&gt;  &lt;int&gt;
 ## 1        1 2015-10-10  Saturday    188
 ## 2        1 2015-10-11    Sunday    272
 ## 3        1 2015-10-12    Monday    257
@@ -503,21 +505,21 @@
     <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">head3</span></code></pre></figure>
 
     <div class="highlighter-rouge"><pre class="highlight"><code>## Source: local data frame [2,000 x 2]
-## Groups: &amp;lt;by row&amp;gt;
+## Groups: &lt;by row&gt;
 ## 
 ## # A tibble: 2,000 × 2
 ##    shop_id     head3
-## *    &amp;lt;int&amp;gt;    &amp;lt;list&amp;gt;
-## 1        1 &amp;lt;int [3]&amp;gt;
-## 2        2 &amp;lt;int [3]&amp;gt;
-## 3        3 &amp;lt;int [3]&amp;gt;
-## 4        4 &amp;lt;int [3]&amp;gt;
-## 5        5 &amp;lt;int [3]&amp;gt;
-## 6        6 &amp;lt;int [3]&amp;gt;
-## 7        7 &amp;lt;int [3]&amp;gt;
-## 8        8 &amp;lt;int [3]&amp;gt;
-## 9        9 &amp;lt;int [3]&amp;gt;
-## 10      10 &amp;lt;int [3]&amp;gt;
+## *    &lt;int&gt;    &lt;list&gt;
+## 1        1 &lt;int [3]&gt;
+## 2        2 &lt;int [3]&gt;
+## 3        3 &lt;int [3]&gt;
+## 4        4 &lt;int [3]&gt;
+## 5        5 &lt;int [3]&gt;
+## 6        6 &lt;int [3]&gt;
+## 7        7 &lt;int [3]&gt;
+## 8        8 &lt;int [3]&gt;
+## 9        9 &lt;int [3]&gt;
+## 10      10 &lt;int [3]&gt;
 ## # ... with 1,990 more rows
 </code></pre>
     </div>
@@ -534,13 +536,13 @@
     <p>OK, good. The next thing is to write a forecast function and apply it the dataset. <code class="highlighter-rouge">forecast</code> library is what we are looking for.</p>
 
     <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">library</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span><span class="w">
-</span><span class="n">forecast.by.ets</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">df</span><span class="p">){</span><span class="w">
+</span><span class="n">forecast.by.ets</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">df</span><span class="p">){</span><span class="w">
   </span><span class="n">forecast</span><span class="p">(</span><span class="n">ets</span><span class="p">(</span><span class="n">to.ts</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span><span class="m">14</span><span class="p">)</span><span class="o">$</span><span class="n">mean</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
 
     <p>Let’s test this function:</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">forecast.by.ets</span><span class="p">(</span><span class="n">tc2017</span><span class="o">%&amp;gt;%</span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">==</span><span class="m">1</span><span class="p">))</span></code></pre></figure>
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">forecast.by.ets</span><span class="p">(</span><span class="n">tc2017</span><span class="o">%&gt;%</span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">==</span><span class="m">1</span><span class="p">))</span></code></pre></figure>
 
     <div class="highlighter-rouge"><pre class="highlight"><code>## Time Series:
 ## Start = c(56, 3) 
@@ -553,24 +555,24 @@
 
     <p>OK, it seems working. Then applying it to the whole dataset:</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">out</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w"> </span><span class="n">group_by</span><span class="p">(</span><span class="n">shop_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w">
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">out</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">group_by</span><span class="p">(</span><span class="n">shop_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
   </span><span class="n">do</span><span class="p">(</span><span class="n">predict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forecast.by.ets</span><span class="p">(</span><span class="n">.</span><span class="p">))</span></code></pre></figure>
 
     <p>Above function is correct. Why I leave it there is that it is so slow for our goal and here comes what this article about: how to parallelized this computation? But first let me show you above function do works:</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">out</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w">
-  </span><span class="n">group_by</span><span class="p">(</span><span class="n">shop_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w">
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">out</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">shop_id</span><span class="o">&lt;</span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">group_by</span><span class="p">(</span><span class="n">shop_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
   </span><span class="n">do</span><span class="p">(</span><span class="n">predict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forecast.by.ets</span><span class="p">(</span><span class="n">.</span><span class="p">))</span><span class="w">
 </span><span class="n">out</span></code></pre></figure>
 
     <div class="highlighter-rouge"><pre class="highlight"><code>## Source: local data frame [2 x 2]
-## Groups: &amp;lt;by row&amp;gt;
+## Groups: &lt;by row&gt;
 ## 
 ## # A tibble: 2 &amp;times; 2
 ##   shop_id  predict
-## *   &amp;lt;int&amp;gt;   &amp;lt;list&amp;gt;
-## 1       1 &amp;lt;S3: ts&amp;gt;
-## 2       2 &amp;lt;S3: ts&amp;gt;
+## *   &lt;int&gt;   &lt;list&gt;
+## 1       1 &lt;S3: ts&gt;
+## 2       2 &lt;S3: ts&gt;
 </code></pre>
     </div>
 
@@ -590,7 +592,7 @@
 
     <p>Finally, all the stuffs that we need are prepared. Now the problem is following code only run in one core, which is a total waste. Come on, these jobs are perfectly separated from each other.</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">out</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w"> </span><span class="n">group_by</span><span class="p">(</span><span class="n">shop_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w">
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">out</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">group_by</span><span class="p">(</span><span class="n">shop_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
   </span><span class="n">do</span><span class="p">(</span><span class="n">predict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forecast.by.ets</span><span class="p">(</span><span class="n">.</span><span class="p">))</span></code></pre></figure>
 
     <p>Yes, you can just ignore <code class="highlighter-rouge">dplyr</code> function and write your own parallel version using something like <code class="highlighter-rouge">foreach</code> or <code class="highlighter-rouge">parallel</code>. However, luckily there is a simple solution for this problem by the author of <code class="highlighter-rouge">ggplot2</code>. He provided a very elegant way to solve this problem. The library is named <code class="highlighter-rouge">multidplyr</code>. (NOT multiplyr)</p>
@@ -599,13 +601,13 @@
 
     <p><code class="highlighter-rouge">multidplyr</code> is a fantastic library. The best thing about <code class="highlighter-rouge">multidplyr</code> is that you need <strong>very little</strong> modification of your original <code class="highlighter-rouge">dplyr</code> version codes, and <code class="highlighter-rouge">multidplyr</code> will take care of almost all the other things. For our case, the codes become:</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">out</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w"> </span><span class="n">partition</span><span class="p">(</span><span class="n">shop_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w">
-  </span><span class="n">do</span><span class="p">(</span><span class="n">predict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forecast.by.ets</span><span class="p">(</span><span class="n">.</span><span class="p">))</span><span class="w"> </span><span class="o">%&amp;gt;%</span><span class="w">
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">out</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tc2017</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">partition</span><span class="p">(</span><span class="n">shop_id</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">do</span><span class="p">(</span><span class="n">predict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forecast.by.ets</span><span class="p">(</span><span class="n">.</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
   </span><span class="n">collect</span><span class="p">()</span><span class="w"> </span></code></pre></figure>
 
     <p>What is the difference? The <code class="highlighter-rouge">group_by</code> function is changed to <code class="highlighter-rouge">partition</code>, and we need to collect the data to its original format using <code class="highlighter-rouge">collect</code>. So basically, you need nothing to do, right? Clearly above code can not run correctly. At least, we need some kind of broadcast even we do not need sync in this case. In order solve this you will need some codes like:</p>
 
-    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">cluster</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="w"> </span><span class="n">get_default_cluster</span><span class="p">()</span><span class="w">
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">cluster</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">get_default_cluster</span><span class="p">()</span><span class="w">
 </span><span class="n">cluster_library</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span><span class="w"> </span><span class="s2">"forecast"</span><span class="p">)</span><span class="w">
 </span><span class="n">cluster_library</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span><span class="w"> </span><span class="s2">"dplyr"</span><span class="p">)</span><span class="w">
 
