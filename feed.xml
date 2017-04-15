@@ -341,6 +341,10 @@
 
 
 &lt;div class=&quot;medium-8 medium-pull-4 columns&quot;&gt;
+
+    &lt;div class=&quot;alert-box warning &quot;&gt;&lt;p&gt;This is not an entry level article. If you cannot understand the content, most likely it is because of my poor English. If not, you should probably learn more about &lt;em&gt;dplyr&lt;/em&gt;, &lt;em&gt;forecast&lt;/em&gt;(time series analysis library. This article uses this library heavily), &lt;em&gt;ggplot2&lt;/em&gt;(plotting library) and basics in parallel computing such as threads and processes.&lt;/p&gt;
+&lt;/div&gt;
+
     &lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
 
     &lt;p&gt;Recently, I took apart in the &lt;a href=&quot;https://tianchi.shuju.aliyun.com/competition/introduction.htm?raceId=231591&quot;&gt;IJCAI-17 Customer Flow Forecasts&lt;/a&gt;. It is an interesting competition in some extent. The &lt;a href=&quot;https://tianchi.shuju.aliyun.com/competition/information.htm?raceId=231591&quot;&gt;datasets&lt;/a&gt; provided include:&lt;/p&gt;
