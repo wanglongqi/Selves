@@ -2,9 +2,9 @@
 <?xml-stylesheet type="text/xsl" href="/assets/xslt/atom.xslt" ?>
 <?xml-stylesheet type="text/css" href="/assets/css/atom.css" ?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-	<id>http://localhost:4000/</id>
+	<id>https://longqi.ga/</id>
 	<title>Why &amp; How</title>
-	<updated>2017-04-15T17:02:20+08:00</updated>
+	<updated>2017-04-15T17:22:26+08:00</updated>
 
 	<subtitle>以生之有涯随知之无涯，殆矣，然何为，为何为。</subtitle>
 
@@ -23,8 +23,8 @@
 		</author>
 	
 
-	<link href="http://localhost:4000/atom.xml" rel="self" type="application/rss+xml" />
-	<link href="http://localhost:4000/" rel="alternate" type="text/html" />
+	<link href="https://longqi.ga/atom.xml" rel="self" type="application/rss+xml" />
+	<link href="https://longqi.ga/" rel="alternate" type="text/html" />
 
 	<generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator>
 
