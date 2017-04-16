@@ -1,0 +1,1050 @@
+<!doctype html>
+<html class="no-js" lang="zh_CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>WHYHOW系列之json文件处理</title>
+
+    <link rel="stylesheet" type="text/css" href="https://longqi.ga/assets/css/styles_feeling_responsive.css">
+
+  
+
+	<script src="https://longqi.ga/assets/js/modernizr.min.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+	<script>
+		WebFont.load({
+			google: {
+				families: [ 'Lato:400,700,400italic:latin', 'Volkhov::latin' ]
+			}
+		});
+	</script>
+
+	<noscript>
+		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic%7CVolkhov' rel='stylesheet' type='text/css'>
+	</noscript>
+
+
+	<!-- Search Engine Optimization -->
+	<meta name="description" content="JSON是Javascript的数据交换格式，经常会遇到以JSON格式存储的数据，在R中应该如何正确的使用JSON格式呢？">
+	<meta name="google-site-verification" content="">
+	<meta name="msvalidate.01" content="" >
+	
+	<link rel="author" href="">
+	
+	
+	<link rel="canonical" href="https://longqi.ga/whyhow/whyhow.jsonlite/">
+
+
+	<!-- Facebook Open Graph -->
+	<meta property="og:title" content="WHYHOW系列之json文件处理">
+	<meta property="og:description" content="JSON是Javascript的数据交换格式，经常会遇到以JSON格式存储的数据，在R中应该如何正确的使用JSON格式呢？">
+	<meta property="og:url" content="https://longqi.ga/whyhow/whyhow.jsonlite/">
+	<meta property="og:locale" content="zh_CN">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Why & How">
+	
+	
+
+
+	
+
+	<link type="text/plain" rel="author" href="https://longqi.ga/humans.txt">
+
+	
+
+	
+
+	<link rel="icon" sizes="32x32" href="https://longqi.ga/assets/img/favicon-32x32.png">
+
+	<link rel="icon" sizes="192x192" href="https://longqi.ga/assets/img/touch-icon-192x192.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://longqi.ga/assets/img/apple-touch-icon-180x180-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://longqi.ga/assets/img/apple-touch-icon-152x152-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://longqi.ga/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://longqi.ga/assets/img/apple-touch-icon-120x120-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://longqi.ga/assets/img/apple-touch-icon-114x114-precomposed.png">
+
+	
+	<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://longqi.ga/assets/img/apple-touch-icon-76x76-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://longqi.ga/assets/img/apple-touch-icon-72x72-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" href="https://longqi.ga/assets/img/apple-touch-icon-precomposed.png">	
+
+	<meta name="msapplication-TileImage" content="https://longqi.ga/assets/img/msapplication_tileimage.png">
+
+	<meta name="msapplication-TileColor" content="#fabb00">
+
+
+	
+
+</head>
+<body id="top-of-page" class="post-toc-left">
+	
+	<div id="navigation" class="sticky">
+  <nav class="top-bar" role="navigation" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+      <h1 class="show-for-small-only"><a href="https://longqi.ga" class="icon-tree"> Why & How</a></h1>
+    </li>
+       <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+      <li class="toggle-topbar menu-icon"><a href="#"><span>导航</span></a></li>
+    </ul>
+    <section class="top-bar-section">
+
+      <ul class="right">
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+            
+            
+              <li class="divider"></li>
+              <li><a  href="https://longqi.ga/search/">搜索</a></li>
+
+            
+            
+          
+        
+
+              
+
+          
+          
+            
+            
+              <li class="divider"></li>
+              <li><a  href="https://longqi.ga/contact/">与我联系</a></li>
+
+            
+            
+          
+        
+        
+      </ul>
+
+      <ul class="left">
+        
+
+              
+
+          
+          
+
+            
+            
+              <li><a  href="https://longqi.ga/">主页</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+              
+
+          
+          
+
+            
+            
+
+              <li class="has-dropdown">
+                <a  href="https://longqi.ga/projects/">个人项目</a>
+
+                  <ul class="dropdown">
+                    
+
+                      
+
+                      <li><a  href="http://writetex.tk" target="_blank">WriteTeX</a></li>
+                    
+                  </ul>
+
+              </li>
+              <li class="divider"></li>
+            
+          
+        
+
+              
+
+          
+          
+
+            
+            
+
+              <li class="has-dropdown">
+                <a  href="https://longqi.ga/blog/">博客</a>
+
+                  <ul class="dropdown">
+                    
+
+                      
+
+                      <li><a  href="https://longqi.ga/blog/archive/">文章目录</a></li>
+                    
+                  </ul>
+
+              </li>
+              <li class="divider"></li>
+            
+          
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+        
+        
+      </ul>
+    </section>
+  </nav>
+</div><!-- /#navigation -->
+
+	
+
+	
+
+<div id="masthead">
+	<div class="row">
+		<div class="small-12 columns">
+			<a id="logo" href="https://longqi.ga/" title="Why & How – Why &amp; How 崴&amp;灏">
+				<img src="https://longqi.ga/assets/img/logo.png" alt="Why & How – Why &amp; How 崴&amp;灏">
+			</a>
+		</div><!-- /.small-12.columns -->
+	</div><!-- /.row -->
+</div><!-- /#masthead -->
+
+
+
+
+
+
+
+
+
+
+	
+
+
+<div class="row t30">
+	<div class="medium-12 columns">
+		<article itemscope itemtype="http://schema.org/Article">
+			<header>
+				
+
+				<div itemprop="name"  class="medium-8">
+					
+					<h1>WHYHOW系列之json文件处理</h1>
+				</div>
+			</header>
+
+
+			
+			<div class="medium-8">
+			<p class="teaser" itemprop="description">
+				JSON是Javascript的数据交换格式，经常会遇到以JSON格式存储的数据，在R中应该如何正确的使用JSON格式呢？
+			</p>
+			</div>
+			
+
+			<div itemprop="articleSection">
+			
+<div class="row">
+<div class="medium-4 medium-push-8 columns">
+    <div class="panel radius">
+      <p id="toc"><strong>目录</strong></p>
+<ul id="markdown-toc">
+  <li><a href="#why-jsonlite" id="markdown-toc-why-jsonlite">Why <em>jsonlite</em></a>    <ul>
+      <li><a href="#why-json" id="markdown-toc-why-json">Why JSON</a></li>
+      <li><a href="#section" id="markdown-toc-section">自省过程</a></li>
+      <li><a href="#why-jsonlite-1" id="markdown-toc-why-jsonlite-1">Why JSONLITE</a></li>
+    </ul>
+  </li>
+  <li><a href="#how-jsonlite" id="markdown-toc-how-jsonlite">How <em>jsonlite</em></a>    <ul>
+      <li><a href="#section-1" id="markdown-toc-section-1">简单的读入</a></li>
+      <li><a href="#section-2" id="markdown-toc-section-2">压平数据</a></li>
+      <li><a href="#section-3" id="markdown-toc-section-3">其他功能</a></li>
+      <li><a href="#r" id="markdown-toc-r">序列化R对象</a></li>
+    </ul>
+  </li>
+</ul>
+      <hr />
+
+      <aside>
+	<div class="panel radius" id="sidebar-quote">
+		<h3>庄子·养生主</h3>
+		<p>
+		吾生也有涯，而知也无涯。以有涯隨无涯，殆已；已而為知者，殆而已矣。為善无近名，為惡無近刑。緣督以為經，可以保身，可以全生，可以養親，可以盡年。
+		</p>
+	</div>
+
+  <img class="b30" src="/images/bear-300x300.jpg" alt="" />
+
+
+	<div class="border-dotted radius b30">
+		<a href="//whyhow.tk"><img src="//www.whyhow.tk/public/logo.svg" alt="姐妹站点" /></a>
+		<p class="text-left">
+			这是本站的<a href="//whyhow.tk">姐妹站点</a>，热烈欢迎大家光临！
+		</p>
+	</div>
+</aside>
+
+    </div>
+  </div><!-- /.medium-4.columns -->
+
+
+
+<div class="medium-8 medium-pull-4 columns">
+
+    <h2 id="why-jsonlite">Why <em>jsonlite</em></h2>
+
+    <h3 id="why-json">Why JSON</h3>
+    <p>JSON是Javascript的数据交换格式，在互联网如此发达的今天，数据的交换和展示已经成为互联网服务的重要组成部分。在这当中，很大一部分的数据还是用来进行网页渲染的。传统地，也有一些使用XML作为数据交换格式的，然而随着Javascript的盛行，今天很大部分数据是使用JSON格式进行交换的。所以，读写JSON格式基本已经成为了必备技能。</p>
+
+    <p>另一方面，JSON格式结构简单，在Javascript里处理相当便捷，在其他程序语言中也比较容易，所以JSON也是一种值得学习的数据格式。</p>
+
+    <h3 id="section">自省过程</h3>
+
+    <p>刚才讲过了，JSON格式本身比较简单，所以读写库的编写并不困难。实际上市面上的JSON读写库可谓多如牛毛。那为什么又要说读写库有优劣呢？</p>
+
+    <p>我的看法是这样的：</p>
+
+    <ol>
+      <li>读写速度不同。不同的读写库的读写速度差异是很大的，一个好的读写库应该有足够的效率。</li>
+      <li>数据化简功能强大。JSON格式本身比较简单，如果不对数据进行化简，那么读写库其实意义不大。我们是从JSON读入数据，读入数据的目的大部分时候是处理数据，所以，好的读写库是可以将JSON尽可能的转换成方便分析的数据格式，比如R的<code class="highlighter-rouge">data.frame</code>。如果JSON读写库可以提供优良的化简功能，即使效率稍差也是可以接受的。</li>
+      <li>数据写出接口有详细的控制。虽然大部分时候默认值可能就可以接受，强大的可定制输出的接口，也是优秀的库必备的技能。</li>
+      <li>接口设计简明。一个本来就不复杂的格式设计超级复杂的接口，本来就是逆天的存在。</li>
+    </ol>
+
+    <p>以上就是我们寻找的好的JSON库的基本原则。下面我们行动起来：</p>
+
+    <h3 id="why-jsonlite-1">Why JSONLITE</h3>
+    <p>本文主要关注R下的JSON读写库，Python下的读写库正确的选择可能是SimpleJSON。</p>
+
+    <p>R下比较常见的JSON读写库有：</p>
+
+    <ol>
+      <li>rjson</li>
+      <li>RJSONIO</li>
+      <li>jsonlite</li>
+    </ol>
+
+    <p><code class="highlighter-rouge">rjson</code>可以完成json的读写，但是并不提供其他功能。<code class="highlighter-rouge">RJSONIO</code>是一个相对来讲比较完善的JSON库，核心读入函数<code class="highlighter-rouge">fromJSON</code>的选项很多：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">fromJSON</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">handler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">,</span><span class="w">
+          </span><span class="n">default.size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="n">depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">150L</span><span class="p">,</span><span class="w"> </span><span class="n">allowComments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w">
+           </span><span class="n">asText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isContent</span><span class="p">(</span><span class="n">content</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">,</span><span class="w">
+            </span><span class="n">maxChar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0L</span><span class="p">,</span><span class="w"> </span><span class="n">nchar</span><span class="p">(</span><span class="n">content</span><span class="p">)),</span><span class="w"> </span><span class="n">simplify</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Strict</span><span class="p">,</span><span class="w">
+             </span><span class="n">nullValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">simplifyWithNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w">
+              </span><span class="n">encoding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA_character_</span><span class="p">,</span><span class="w"> </span><span class="n">stringFun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p">)</span></code></pre></figure>
+
+    <p><code class="highlighter-rouge">toJSON</code>的选项也不少：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">toJSON</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">container</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isContainer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">asIs</span><span class="p">,</span><span class="w"> </span><span class="n">.level</span><span class="p">),</span><span class="w"> 
+        </span><span class="n">collapse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p">,</span><span class="w"> </span><span class="n">.level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1L</span><span class="p">,</span><span class="w">
+         </span><span class="n">.withNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nf">names</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">.na</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"null"</span><span class="p">,</span><span class="w">
+         </span><span class="n">.escapeEscapes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">pretty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">asIs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">.inf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">" Infinity"</span><span class="p">)</span></code></pre></figure>
+
+    <p>感觉起来应该是一个不错的IO库，然而经过测试它的读入化简功能不够强大，输出的控制能力有不够精细。整体来讲，还有一些可以提升的空间。不过最重要的是这个库的设计和上面的理想方式不同。</p>
+
+    <p>说那么多，<code class="highlighter-rouge">jsonlite</code>也该闪亮登场了。首先，这个库的题注是</p>
+
+    <blockquote>
+      <p>A Robust, High Performance JSON Parser and Generator for R</p>
+    </blockquote>
+
+    <p>这个是为什么，大家需要到<code class="highlighter-rouge">jsonlite</code>的官网自行查询。总之，这个库可以满足第一点。</p>
+
+    <p>其次，我们来看<code class="highlighter-rouge">fromJSON</code>和<code class="highlighter-rouge">toJSON</code>的选项：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">fromJSON</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span><span class="w"> </span><span class="n">simplifyVector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">simplifyDataFrame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simplifyVector</span><span class="p">,</span><span class="w">
+  </span><span class="n">simplifyMatrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simplifyVector</span><span class="p">,</span><span class="w"> </span><span class="n">flatten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p">)</span><span class="w">
+
+</span><span class="n">toJSON</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">dataframe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"rows"</span><span class="p">,</span><span class="w"> </span><span class="s2">"columns"</span><span class="p">,</span><span class="w"> </span><span class="s2">"values"</span><span class="p">),</span><span class="w"> </span><span class="n">matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"rowmajor"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"columnmajor"</span><span class="p">),</span><span class="w"> </span><span class="n">Date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"ISO8601"</span><span class="p">,</span><span class="w"> </span><span class="s2">"epoch"</span><span class="p">),</span><span class="w"> </span><span class="n">POSIXt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"ISO8601"</span><span class="p">,</span><span class="w"> </span><span class="s2">"epoch"</span><span class="p">,</span><span class="w"> </span><span class="s2">"mongo"</span><span class="p">),</span><span class="w"> </span><span class="n">factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="s2">"integer"</span><span class="p">),</span><span class="w">
+  </span><span class="n">complex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="s2">"list"</span><span class="p">),</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"base64"</span><span class="p">,</span><span class="w"> </span><span class="s2">"hex"</span><span class="p">,</span><span class="w"> </span><span class="s2">"mongo"</span><span class="p">),</span><span class="w">
+  </span><span class="n">null</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"list"</span><span class="p">,</span><span class="w"> </span><span class="s2">"null"</span><span class="p">),</span><span class="w"> </span><span class="n">na</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"null"</span><span class="p">,</span><span class="w"> </span><span class="s2">"string"</span><span class="p">),</span><span class="w"> </span><span class="n">auto_unbox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w">
+  </span><span class="n">digits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">pretty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p">)</span></code></pre></figure>
+
+    <p>我想不用解释太多了。<code class="highlighter-rouge">fromJSON</code>的选项简直叫做少得出奇，而提供的选项全部都是数据化简的选项。<code class="highlighter-rouge">toJSON</code>的选项比较丰富，这也正是一个写出库提供精细控制的体现。所以单从这个选项上来看，<code class="highlighter-rouge">jsonlite</code>已经超过了另外两个库。</p>
+
+    <p>最后，<code class="highlighter-rouge">jsonlite</code>的功能是完整的，库里提供了校验JSON格式的函数<code class="highlighter-rouge">validate(txt)</code>，提供了将R对象转换为JSON的<code class="highlighter-rouge">serializeJSON(x, digits = 8, pretty = FALSE)</code>和<code class="highlighter-rouge">unserializeJSON(txt)</code>。同时，库里还提供了base64的解编码函数。</p>
+
+    <p>综上所述，<code class="highlighter-rouge">jsonlite</code>成为了R下读写JSON的不二选择，当然我也不拦着你用<code class="highlighter-rouge">RJSONIO</code>。</p>
+
+    <h2 id="how-jsonlite">How <em>jsonlite</em></h2>
+
+    <p>考虑到写出JSON的内容是不言自明的，下面主要讨论读入JSON的内容。</p>
+
+    <div class="alert-box info "><p>以下内容需要阅读R的str函数的原始输出</p>
+</div>
+
+    <h3 id="section-1">简单的读入</h3>
+    <p>我们以读入新加坡天气的metadata为例，展示这一过程：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">library</span><span class="p">(</span><span class="n">jsonlite</span><span class="p">)</span><span class="w">
+</span><span class="n">txt</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readLines</span><span class="p">(</span><span class="s1">'../SG-Weather/metadata/2017-01-AirTemperature.json'</span><span class="p">)</span><span class="w">
+</span><span class="n">json</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fromJSON</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span><span class="w">
+</span><span class="n">str</span><span class="p">(</span><span class="n">json</span><span class="p">)</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">## List of 3
+##  $ stations    :'data.frame':  18 obs. of  4 variables:
+##   ..$ device_id: chr [1:18] "S109" "S117" "S107" "S43" ...
+##   ..$ location :'data.frame':  18 obs. of  2 variables:
+##   .. ..$ latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+##   .. ..$ longitude: num [1:18] 104 104 104 104 104 ...
+##   ..$ name     : chr [1:18] "Ang Mo Kio Avenue 5" "Banyan Road" "East Coast Parkway" "Kim Chuan Road" ...
+##   ..$ id       : chr [1:18] "S109" "S117" "S107" "S43" ...
+##  $ reading_unit: chr "deg C"
+##  $ reading_type: chr "DBT 1M F"</code></pre></figure>
+
+    <p>这里注意到<code class="highlighter-rouge">jsonlite</code>已经把读入的数据进行了化简，<code class="highlighter-rouge">stations</code>已经被转换为了<code class="highlighter-rouge">data.frame</code>：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">json</span><span class="o">$</span><span class="n">stations</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">##    device_id location.latitude location.longitude                    name
+## 1       S109           1.37640           103.8492     Ang Mo Kio Avenue 5
+## 2       S117           1.25600           103.6790             Banyan Road
+## 3       S107           1.31350           103.9625      East Coast Parkway
+## 4        S43           1.33990           103.8878          Kim Chuan Road
+## 5       S108           1.27990           103.8703    Marina Gardens Drive
+## 6        S44           1.34583           103.6817          Nanyang Avenue
+## 7       S121           1.37288           103.7224  Old Choa Chu Kang Road
+## 8       S106           1.41680           103.9673              Pulau Ubin
+## 9        S06           1.35240           103.9007                     S06
+## 10      S102           1.18900           103.7680        Semakau Landfill
+## 11      S122           1.41731           103.8249          Sembawang Road
+## 12       S96           1.31750           104.0307  Tanah Merah Coast Road
+## 13      S115           1.29377           103.6184     Tuas South Avenue 3
+## 14      S24B           1.36780           103.9980 Upper Changi Road North
+## 15       S24           1.36780           103.9826 Upper Changi Road North
+## 16      S116           1.28100           103.7540      West Coast Highway
+## 17      S104           1.44387           103.7854      Woodlands Avenue 9
+## 18      S100           1.41720           103.7485          Woodlands Road
+##      id
+## 1  S109
+## 2  S117
+## 3  S107
+## 4   S43
+## 5  S108
+## 6   S44
+## 7  S121
+## 8  S106
+## 9   S06
+## 10 S102
+## 11 S122
+## 12  S96
+## 13 S115
+## 14 S24B
+## 15  S24
+## 16 S116
+## 17 S104
+## 18 S100</code></pre></figure>
+
+    <p>这个功能是很好，如果我们强制不使用化简功能的读入结果是这样的：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">json</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fromJSON</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span><span class="w"> </span><span class="n">simplifyVector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span><span class="w">
+</span><span class="n">str</span><span class="p">(</span><span class="n">json</span><span class="p">)</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">## List of 3
+##  $ stations    :List of 18
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S109"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.38
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Ang Mo Kio Avenue 5"
+##   .. ..$ id       : chr "S109"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S117"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.26
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Banyan Road"
+##   .. ..$ id       : chr "S117"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S107"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.31
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "East Coast Parkway"
+##   .. ..$ id       : chr "S107"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S43"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.34
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Kim Chuan Road"
+##   .. ..$ id       : chr "S43"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S108"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.28
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Marina Gardens Drive"
+##   .. ..$ id       : chr "S108"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S44"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.35
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Nanyang Avenue"
+##   .. ..$ id       : chr "S44"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S121"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.37
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Old Choa Chu Kang Road"
+##   .. ..$ id       : chr "S121"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S106"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.42
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Pulau Ubin"
+##   .. ..$ id       : chr "S106"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S06"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.35
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "S06"
+##   .. ..$ id       : chr "S06"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S102"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.19
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Semakau Landfill"
+##   .. ..$ id       : chr "S102"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S122"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.42
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Sembawang Road"
+##   .. ..$ id       : chr "S122"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S96"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.32
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Tanah Merah Coast Road"
+##   .. ..$ id       : chr "S96"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S115"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.29
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Tuas South Avenue 3"
+##   .. ..$ id       : chr "S115"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S24B"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.37
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Upper Changi Road North"
+##   .. ..$ id       : chr "S24B"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S24"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.37
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Upper Changi Road North"
+##   .. ..$ id       : chr "S24"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S116"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.28
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "West Coast Highway"
+##   .. ..$ id       : chr "S116"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S104"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.44
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Woodlands Avenue 9"
+##   .. ..$ id       : chr "S104"
+##   ..$ :List of 4
+##   .. ..$ device_id: chr "S100"
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.42
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr "Woodlands Road"
+##   .. ..$ id       : chr "S100"
+##  $ reading_unit: chr "deg C"
+##  $ reading_type: chr "DBT 1M F"</code></pre></figure>
+
+    <p>可以看到这就是文件原始的结构，读入这样的文件当然我们更希望的是获得一个已经化简的结果。这也是为什么上面一直强调化简的原因。</p>
+
+    <h3 id="section-2">压平数据</h3>
+    <p>细心的读者应该看到上面化简完的结果里（注意看str的输出），<code class="highlighter-rouge">location</code>是单一的一列，而下面下属两个子列。我将上述代码再执行一次：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">json</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fromJSON</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span><span class="w">
+</span><span class="n">str</span><span class="p">(</span><span class="n">json</span><span class="p">)</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">## List of 3
+##  $ stations    :'data.frame':  18 obs. of  4 variables:
+##   ..$ device_id: chr [1:18] "S109" "S117" "S107" "S43" ...
+##   ..$ location :'data.frame':  18 obs. of  2 variables:
+##   .. ..$ latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+##   .. ..$ longitude: num [1:18] 104 104 104 104 104 ...
+##   ..$ name     : chr [1:18] "Ang Mo Kio Avenue 5" "Banyan Road" "East Coast Parkway" "Kim Chuan Road" ...
+##   ..$ id       : chr [1:18] "S109" "S117" "S107" "S43" ...
+##  $ reading_unit: chr "deg C"
+##  $ reading_type: chr "DBT 1M F"</code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">  ..$ location :'data.frame': 18 obs. of  2 variables:
+    .. ..$ latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+    .. ..$ longitude: num [1:18] 104 104 104 104 104 ...</code></pre></figure>
+
+    <p>注意到了吧，<code class="highlighter-rouge">location</code>一列是两层结构，访问时需要这样操作：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">json</span><span class="o">$</span><span class="n">stations</span><span class="o">$</span><span class="n">location</span><span class="o">$</span><span class="n">latitude</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">##  [1] 1.37640 1.25600 1.31350 1.33990 1.27990 1.34583 1.37288 1.41680
+##  [9] 1.35240 1.18900 1.41731 1.31750 1.29377 1.36780 1.36780 1.28100
+## [17] 1.44387 1.41720</code></pre></figure>
+
+    <p>这样的结构对于<code class="highlighter-rouge">dplyr</code>一类的工具可能就不是很方便了，比如：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span><span class="w">
+</span><span class="n">json</span><span class="o">$</span><span class="n">stations</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">summarise</span><span class="p">(</span><span class="n">lat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="n">location</span><span class="o">$</span><span class="n">latitude</span><span class="p">))</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">## Error: Each variable must be a 1d atomic vector or list.
+## Problem variables: 'location'</code></pre></figure>
+
+    <p>当然你可以先将数据转换程序要的格式，然后再做这个操作，不过<code class="highlighter-rouge">jsonlite</code>提供了压平功能就能直接解决后顾之忧。在需要的时候可以使用：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">json</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fromJSON</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span><span class="w"> </span><span class="n">flatten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
+</span><span class="n">str</span><span class="p">(</span><span class="n">json</span><span class="p">)</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">## List of 3
+##  $ stations    :'data.frame':  18 obs. of  5 variables:
+##   ..$ device_id         : chr [1:18] "S109" "S117" "S107" "S43" ...
+##   ..$ name              : chr [1:18] "Ang Mo Kio Avenue 5" "Banyan Road" "East Coast Parkway" "Kim Chuan Road" ...
+##   ..$ id                : chr [1:18] "S109" "S117" "S107" "S43" ...
+##   ..$ location.latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+##   ..$ location.longitude: num [1:18] 104 104 104 104 104 ...
+##  $ reading_unit: chr "deg C"
+##  $ reading_type: chr "DBT 1M F"</code></pre></figure>
+
+    <p>可以看到，<code class="highlighter-rouge">stations</code>已经压平了，<code class="highlighter-rouge">location</code>变成了<code class="highlighter-rouge">location.latitude</code>和<code class="highlighter-rouge">location.longitude</code>两列了。这一点从直接的打印上很难看出来：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">json</span><span class="o">$</span><span class="n">stations</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">##    device_id                    name   id location.latitude
+## 1       S109     Ang Mo Kio Avenue 5 S109           1.37640
+## 2       S117             Banyan Road S117           1.25600
+## 3       S107      East Coast Parkway S107           1.31350
+## 4        S43          Kim Chuan Road  S43           1.33990
+## 5       S108    Marina Gardens Drive S108           1.27990
+## 6        S44          Nanyang Avenue  S44           1.34583
+## 7       S121  Old Choa Chu Kang Road S121           1.37288
+## 8       S106              Pulau Ubin S106           1.41680
+## 9        S06                     S06  S06           1.35240
+## 10      S102        Semakau Landfill S102           1.18900
+## 11      S122          Sembawang Road S122           1.41731
+## 12       S96  Tanah Merah Coast Road  S96           1.31750
+## 13      S115     Tuas South Avenue 3 S115           1.29377
+## 14      S24B Upper Changi Road North S24B           1.36780
+## 15       S24 Upper Changi Road North  S24           1.36780
+## 16      S116      West Coast Highway S116           1.28100
+## 17      S104      Woodlands Avenue 9 S104           1.44387
+## 18      S100          Woodlands Road S100           1.41720
+##    location.longitude
+## 1            103.8492
+## 2            103.6790
+## 3            103.9625
+## 4            103.8878
+## 5            103.8703
+## 6            103.6817
+## 7            103.7224
+## 8            103.9673
+## 9            103.9007
+## 10           103.7680
+## 11           103.8249
+## 12           104.0307
+## 13           103.6184
+## 14           103.9980
+## 15           103.9826
+## 16           103.7540
+## 17           103.7854
+## 18           103.7485</code></pre></figure>
+
+    <p>这也是为什么需要使用<code class="highlighter-rouge">str</code>的原因，当然你也可以用<code class="highlighter-rouge">colnames(json$stations)</code>来查看列名，不过这是个鸡生蛋的问题，既然你都知道结构了又何必去查看呢？</p>
+
+    <p>有了这样的结构以后，<code class="highlighter-rouge">dplyr</code>就能比较如鱼得水了：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">json</span><span class="o">$</span><span class="n">stations</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">summarise</span><span class="p">(</span><span class="n">lat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="n">location.latitude</span><span class="p">))</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">##        lat
+## 1 1.341603</code></pre></figure>
+
+    <h3 id="section-3">其他功能</h3>
+    <p><code class="highlighter-rouge">jsonlite</code>还有一些其他功能，值得一体的是校验JSON合法性的<code class="highlighter-rouge">validate</code>:</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">validate</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] TRUE</code></pre></figure>
+
+    <p>还有一些直接从网络或者文件直接读取JSON的协助函数，比如</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">read_json</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">simplifyVector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p">)</span><span class="w">
+
+</span><span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p">)</span></code></pre></figure>
+
+    <p>注意到默认从文件读入关闭了化简功能以提高效率。</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">json</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read_json</span><span class="p">(</span><span class="s1">'../SG-Weather/metadata/2017-01-AirTemperature.json'</span><span class="p">,</span><span class="n">simplifyVector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">T</span><span class="p">,</span><span class="w"> </span><span class="n">flatten</span><span class="o">=</span><span class="nb">T</span><span class="p">)</span><span class="w">
+</span><span class="n">str</span><span class="p">(</span><span class="n">json</span><span class="p">)</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">## List of 3
+##  $ stations    :'data.frame':  18 obs. of  5 variables:
+##   ..$ device_id         : chr [1:18] "S109" "S117" "S107" "S43" ...
+##   ..$ name              : chr [1:18] "Ang Mo Kio Avenue 5" "Banyan Road" "East Coast Parkway" "Kim Chuan Road" ...
+##   ..$ id                : chr [1:18] "S109" "S117" "S107" "S43" ...
+##   ..$ location.latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+##   ..$ location.longitude: num [1:18] 104 104 104 104 104 ...
+##  $ reading_unit: chr "deg C"
+##  $ reading_type: chr "DBT 1M F"</code></pre></figure>
+
+    <p>可以看到以上结果和先读入再处理的结果是一样的。但是这两个函数的存在意义其实是不明的，因为<code class="highlighter-rouge">fromJSON</code>本身就可以直接接收文件和网络地址输入：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">json</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fromJSON</span><span class="p">(</span><span class="s1">'../SG-Weather/metadata/2017-01-AirTemperature.json'</span><span class="p">,</span><span class="n">flatten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">T</span><span class="p">)</span><span class="w">
+</span><span class="n">str</span><span class="p">(</span><span class="n">json</span><span class="p">)</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">## List of 3
+##  $ stations    :'data.frame':  18 obs. of  5 variables:
+##   ..$ device_id         : chr [1:18] "S109" "S117" "S107" "S43" ...
+##   ..$ name              : chr [1:18] "Ang Mo Kio Avenue 5" "Banyan Road" "East Coast Parkway" "Kim Chuan Road" ...
+##   ..$ id                : chr [1:18] "S109" "S117" "S107" "S43" ...
+##   ..$ location.latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+##   ..$ location.longitude: num [1:18] 104 104 104 104 104 ...
+##  $ reading_unit: chr "deg C"
+##  $ reading_type: chr "DBT 1M F"</code></pre></figure>
+
+    <p>JSON的写出和base64相关的功能没有太多可说的，直接参看文档即可。</p>
+
+    <div class="alert-box warning "><p>以下内容可以略过</p>
+</div>
+
+    <h3 id="r">序列化R对象</h3>
+    <p>最后需要提一句序列化R对象的问题，<code class="highlighter-rouge">jsonlite</code>中可以使用如下两个函数完成这个工作：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">serializeJSON</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">pretty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span><span class="w">
+
+</span><span class="n">unserializeJSON</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span></code></pre></figure>
+
+    <p>比如：</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">txt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">serializeJSON</span><span class="p">(</span><span class="n">json</span><span class="p">,</span><span class="w"> </span><span class="n">pretty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">T</span><span class="p">)</span><span class="w">
+</span><span class="n">identical</span><span class="p">(</span><span class="n">unserializeJSON</span><span class="p">(</span><span class="n">txt</span><span class="p">),</span><span class="n">json</span><span class="p">)</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] TRUE</code></pre></figure>
+
+    <p>当然这个东西不是万能的，比如ggplot的图像就不能做到序列化，还是老老实实的用save吧。</p>
+
+    <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span><span class="w">
+</span><span class="n">p</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ggplot</span><span class="p">(</span><span class="n">mtcars</span><span class="p">,</span><span class="n">aes</span><span class="p">(</span><span class="n">mpg</span><span class="p">,</span><span class="n">cyl</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> 
+  </span><span class="n">geom_point</span><span class="p">()</span><span class="w">
+</span><span class="n">txt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">serializeJSON</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w">
+</span><span class="n">identical</span><span class="p">(</span><span class="n">unserializeJSON</span><span class="p">(</span><span class="n">txt</span><span class="p">),</span><span class="n">p</span><span class="p">)</span></code></pre></figure>
+
+    <figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] FALSE</code></pre></figure>
+
+  </div></div>
+
+<!-- 	it seems jekyll will auto close the div	</div>
+				</div> -->
+			</div>
+			<div class="medium-8">
+			
+						<div id="page-meta" class="t30">
+				<p>
+					<!-- Look the author details up from the site config. -->
+					
+					<!-- Output author details if some exist. -->
+					
+
+				
+				<time class="icon-calendar pr20" datetime="2017-04-16T10:51:03+08:00" itemprop="datePublished"> 2017-04-16</time>
+				
+
+				<span class="icon-archive pr20"> WHYHOW</span>
+				<br />
+				<span class="pr20"><span class="icon-price-tag pr10"> R</span> <span class="icon-price-tag pr10"> jsonlite</span> <span class="icon-price-tag pr10"> Tutorial</span> <span class="icon-price-tag pr10"> WhyHow</span> </span>
+			</p>
+
+			
+			<div id="post-nav" class="row">
+				
+				<div class="small-5 columns"><a class="button small radius prev" href="https://longqi.ga/data/aboutindiarape/">&laquo; 打假：印度是强奸之国</a></div><!-- /.small-4.columns -->
+				
+				<div class="small-2 columns text-center"><a class="radius button small" href="https://longqi.ga/blog/archive/" title="Blog 目录">目录</a></div><!-- /.small-4.columns -->
+				
+				<div class="small-5 columns text-right"></div><!-- /.small-4.columns -->
+				
+			</div>
+			
+			</div><!--  /.page-meta -->
+
+			
+
+			
+						
+				<h3 id="comments" class="t60">评论</h3>
+			    <div id="disqus_thread"></div>
+			    <script type="text/javascript">
+			        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+			        var disqus_shortname = 'whyhow'; 
+			        var disqus_identifier = '/whyhow/whyhow.jsonlite/';
+
+			        /* * * DON'T EDIT BELOW THIS LINE * * */
+			        (function() {
+			            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+			        })();
+			    </script>
+			    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+			
+
+
+
+			
+			</div>
+		</article>
+	</div><!-- /.medium-12.columns -->
+</div><!-- /.row -->
+
+
+
+
+
+
+
+	
+	    <div id="up-to-top" class="row">
+      <div class="small-12 columns" style="text-align: right;">
+        <a class="iconfont" href="#top-of-page">&#xf108;</a>
+      </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+
+
+    <footer id="footer-content" class="bg-grau">
+      <div id="footer">
+        <div class="row">
+          <div class="medium-6 large-5 columns">
+            <h5 class="shadow-black">关于本站</h5>
+
+            <p class="shadow-black">
+              以生之有涯随知之无涯，殆矣，然何为，为何为。
+              <a href="https://longqi.ga/info/">更多 ›</a>
+            </p>
+          </div><!-- /.large-6.columns -->
+
+
+          <div class="small-6 medium-3 large-3 large-offset-1 columns">
+            
+              
+                <h5 class="shadow-black">Services</h5>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+
+              <ul class="no-bullet shadow-black">
+              
+                
+                  <li >
+                    <a href="https://longqi.ga"  title=""></a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="https://longqi.ga/contact/"  title="Contact">Contact</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="https://longqi.ga/feed.xml"  title="Subscribe to RSS Feed">RSS</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="https://longqi.ga/atom.xml"  title="Subscribe to Atom Feed">Atom</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="https://longqi.ga/sitemap.xml"  title="Sitemap for Google Webmaster Tools">sitemap.xml</a>
+                  </li>
+              
+              </ul>
+          </div><!-- /.large-4.columns -->
+
+
+          <div class="small-6 medium-3 large-3 columns">
+            
+              
+                <h5 class="shadow-black">致谢</h5>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+
+            <ul class="no-bullet shadow-black">
+            
+              
+                <li >
+                  <a href="https://longqi.ga"  title=""></a>
+                </li>
+            
+              
+                <li class="theme" >
+                  <a href="http://phlow.de/" target="_blank"  title="Theme by PHLOW">Theme by PHLOW</a>
+                </li>
+            
+              
+                <li class="backend" >
+                  <a href="http://jekyllrb.com/" target="_blank"  title="Power by Jekyll">Power by Jekyll</a>
+                </li>
+            
+              
+                <li class="server" >
+                  <a href="http://github.com/" target="_blank"  title="Hosted on Github">Hosted on Github</a>
+                </li>
+            
+              
+                <li class="server" >
+                  <a href="http://cloudflare.com/" target="_blank"  title="CDN through Cloudflare">CDN through Cloudflare</a>
+                </li>
+            
+            </ul>
+          </div><!-- /.large-3.columns -->
+        </div><!-- /.row -->
+
+      </div><!-- /#footer -->
+
+
+      <div id="subfooter">
+        <nav class="row">
+          <section id="subfooter-left" class="small-12 medium-6 columns credits">
+            
+          </section>
+
+          <section id="subfooter-right" class="small-12 medium-6 columns">
+            <ul class="inline-list social-icons">
+            
+              <li><a href="http://github.com/wanglongqi" target="_blank" class="icon-github" title="GitHub"></a></li>
+            
+              <li><a href="http://whyhow.tk" target="_blank" class="icon-globe" title="Whyhow"></a></li>
+            
+              <li><a href="http://whyhow.tk" target="_blank" class="icon-cog" title="WriteTeX"></a></li>
+            
+              <li><a href="http://pyconsole.tk" target="_blank" class="icon-code" title="PyConsole"></a></li>
+            
+              <li><a href="https://github.com/wanglongqi/RoadProfile" target="_blank" class="icon-lab-flask" title="RoadProfile"></a></li>
+            
+            </ul>
+          </section>
+        </nav>
+      </div><!-- /#subfooter -->
+    </footer>
+
+	
+
+	
+
+
+<script src="https://longqi.ga/assets/js/javascript.min.js"></script>
+
+
+<script>
+    $("#masthead").backstretch("/images/lazyboy.jpg", {fade: 700});
+    $("#masthead-with-text").backstretch("/images/lazyboy.jpg", {fade: 700});
+</script>
+
+
+
+<script type="text/javascript" src="/assets/js/quote.js"></script>
+<script type="text/javascript">
+  $(document).ready(quoteHTML);
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-6527820-1', 'auto');
+  ga('require', 'displayfeatures');
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+

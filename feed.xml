@@ -9,13 +9,531 @@
 		<atom:link href="https://longqi.ga/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>WHYHOW系列之json文件处理</title>
+				<link>https://longqi.ga/whyhow/whyhow.jsonlite/</link>
+				<pubDate>Sun, 16 Apr 2017 10:51:03 +0800</pubDate>
+				<description>
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;medium-4 medium-push-8 columns&quot;&gt;
+    &lt;div class=&quot;panel radius&quot;&gt;
+      &lt;p id=&quot;toc&quot;&gt;&lt;strong&gt;目录&lt;/strong&gt;&lt;/p&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#why-jsonlite&quot; id=&quot;markdown-toc-why-jsonlite&quot;&gt;Why &lt;em&gt;jsonlite&lt;/em&gt;&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#why-json&quot; id=&quot;markdown-toc-why-json&quot;&gt;Why JSON&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;自省过程&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#why-jsonlite-1&quot; id=&quot;markdown-toc-why-jsonlite-1&quot;&gt;Why JSONLITE&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#how-jsonlite&quot; id=&quot;markdown-toc-how-jsonlite&quot;&gt;How &lt;em&gt;jsonlite&lt;/em&gt;&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;简单的读入&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-2&quot; id=&quot;markdown-toc-section-2&quot;&gt;压平数据&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#section-3&quot; id=&quot;markdown-toc-section-3&quot;&gt;其他功能&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#r&quot; id=&quot;markdown-toc-r&quot;&gt;序列化R对象&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+      &lt;hr /&gt;
+
+      &lt;aside&gt;
+	&lt;div class=&quot;panel radius&quot; id=&quot;sidebar-quote&quot;&gt;
+		&lt;h3&gt;庄子·养生主&lt;/h3&gt;
+		&lt;p&gt;
+		吾生也有涯，而知也无涯。以有涯隨无涯，殆已；已而為知者，殆而已矣。為善无近名，為惡無近刑。緣督以為經，可以保身，可以全生，可以養親，可以盡年。
+		&lt;/p&gt;
+	&lt;/div&gt;
+
+  &lt;img class=&quot;b30&quot; src=&quot;/images/bear-300x300.jpg&quot; alt=&quot;&quot; /&gt;
+
+
+	&lt;div class=&quot;border-dotted radius b30&quot;&gt;
+		&lt;a href=&quot;//whyhow.tk&quot;&gt;&lt;img src=&quot;//www.whyhow.tk/public/logo.svg&quot; alt=&quot;姐妹站点&quot; /&gt;&lt;/a&gt;
+		&lt;p class=&quot;text-left&quot;&gt;
+			这是本站的&lt;a href=&quot;//whyhow.tk&quot;&gt;姐妹站点&lt;/a&gt;，热烈欢迎大家光临！
+		&lt;/p&gt;
+	&lt;/div&gt;
+&lt;/aside&gt;
+
+    &lt;/div&gt;
+  &lt;/div&gt;&lt;!-- /.medium-4.columns --&gt;
+
+
+
+&lt;div class=&quot;medium-8 medium-pull-4 columns&quot;&gt;
+
+    &lt;h2 id=&quot;why-jsonlite&quot;&gt;Why &lt;em&gt;jsonlite&lt;/em&gt;&lt;/h2&gt;
+
+    &lt;h3 id=&quot;why-json&quot;&gt;Why JSON&lt;/h3&gt;
+    &lt;p&gt;JSON是Javascript的数据交换格式，在互联网如此发达的今天，数据的交换和展示已经成为互联网服务的重要组成部分。在这当中，很大一部分的数据还是用来进行网页渲染的。传统地，也有一些使用XML作为数据交换格式的，然而随着Javascript的盛行，今天很大部分数据是使用JSON格式进行交换的。所以，读写JSON格式基本已经成为了必备技能。&lt;/p&gt;
+
+    &lt;p&gt;另一方面，JSON格式结构简单，在Javascript里处理相当便捷，在其他程序语言中也比较容易，所以JSON也是一种值得学习的数据格式。&lt;/p&gt;
+
+    &lt;h3 id=&quot;section&quot;&gt;自省过程&lt;/h3&gt;
+
+    &lt;p&gt;刚才讲过了，JSON格式本身比较简单，所以读写库的编写并不困难。实际上市面上的JSON读写库可谓多如牛毛。那为什么又要说读写库有优劣呢？&lt;/p&gt;
+
+    &lt;p&gt;我的看法是这样的：&lt;/p&gt;
+
+    &lt;ol&gt;
+      &lt;li&gt;读写速度不同。不同的读写库的读写速度差异是很大的，一个好的读写库应该有足够的效率。&lt;/li&gt;
+      &lt;li&gt;数据化简功能强大。JSON格式本身比较简单，如果不对数据进行化简，那么读写库其实意义不大。我们是从JSON读入数据，读入数据的目的大部分时候是处理数据，所以，好的读写库是可以将JSON尽可能的转换成方便分析的数据格式，比如R的&lt;code class=&quot;highlighter-rouge&quot;&gt;data.frame&lt;/code&gt;。如果JSON读写库可以提供优良的化简功能，即使效率稍差也是可以接受的。&lt;/li&gt;
+      &lt;li&gt;数据写出接口有详细的控制。虽然大部分时候默认值可能就可以接受，强大的可定制输出的接口，也是优秀的库必备的技能。&lt;/li&gt;
+      &lt;li&gt;接口设计简明。一个本来就不复杂的格式设计超级复杂的接口，本来就是逆天的存在。&lt;/li&gt;
+    &lt;/ol&gt;
+
+    &lt;p&gt;以上就是我们寻找的好的JSON库的基本原则。下面我们行动起来：&lt;/p&gt;
+
+    &lt;h3 id=&quot;why-jsonlite-1&quot;&gt;Why JSONLITE&lt;/h3&gt;
+    &lt;p&gt;本文主要关注R下的JSON读写库，Python下的读写库正确的选择可能是SimpleJSON。&lt;/p&gt;
+
+    &lt;p&gt;R下比较常见的JSON读写库有：&lt;/p&gt;
+
+    &lt;ol&gt;
+      &lt;li&gt;rjson&lt;/li&gt;
+      &lt;li&gt;RJSONIO&lt;/li&gt;
+      &lt;li&gt;jsonlite&lt;/li&gt;
+    &lt;/ol&gt;
+
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rjson&lt;/code&gt;可以完成json的读写，但是并不提供其他功能。&lt;code class=&quot;highlighter-rouge&quot;&gt;RJSONIO&lt;/code&gt;是一个相对来讲比较完善的JSON库，核心读入函数&lt;code class=&quot;highlighter-rouge&quot;&gt;fromJSON&lt;/code&gt;的选项很多：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;fromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default.size&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;depth&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;150L&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;allowComments&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+           &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asText&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isContent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maxChar&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0L&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nchar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;simplify&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Strict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+             &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nullValue&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;simplifyWithNames&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+              &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;encoding&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;NA_character_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stringFun&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;toJSON&lt;/code&gt;的选项也不少：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;toJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asIs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.level&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+        &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;collapse&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;\n&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.level&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1L&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.withNames&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;names&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.na&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;null&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.escapeEscapes&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pretty&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asIs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;NA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.inf&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot; Infinity&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;感觉起来应该是一个不错的IO库，然而经过测试它的读入化简功能不够强大，输出的控制能力有不够精细。整体来讲，还有一些可以提升的空间。不过最重要的是这个库的设计和上面的理想方式不同。&lt;/p&gt;
+
+    &lt;p&gt;说那么多，&lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt;也该闪亮登场了。首先，这个库的题注是&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;A Robust, High Performance JSON Parser and Generator for R&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;p&gt;这个是为什么，大家需要到&lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt;的官网自行查询。总之，这个库可以满足第一点。&lt;/p&gt;
+
+    &lt;p&gt;其次，我们来看&lt;code class=&quot;highlighter-rouge&quot;&gt;fromJSON&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;toJSON&lt;/code&gt;的选项：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;fromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;simplifyVector&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;simplifyDataFrame&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;simplifyVector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;simplifyMatrix&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;simplifyVector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flatten&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;toJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataframe&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rows&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;columns&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;values&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rowmajor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;columnmajor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ISO8601&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;epoch&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;POSIXt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;string&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ISO8601&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;epoch&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mongo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;string&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;integer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;complex&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;string&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;list&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;raw&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;base64&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hex&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mongo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;list&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;null&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;na&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;null&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;string&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;auto_unbox&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;digits&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pretty&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;force&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;我想不用解释太多了。&lt;code class=&quot;highlighter-rouge&quot;&gt;fromJSON&lt;/code&gt;的选项简直叫做少得出奇，而提供的选项全部都是数据化简的选项。&lt;code class=&quot;highlighter-rouge&quot;&gt;toJSON&lt;/code&gt;的选项比较丰富，这也正是一个写出库提供精细控制的体现。所以单从这个选项上来看，&lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt;已经超过了另外两个库。&lt;/p&gt;
+
+    &lt;p&gt;最后，&lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt;的功能是完整的，库里提供了校验JSON格式的函数&lt;code class=&quot;highlighter-rouge&quot;&gt;validate(txt)&lt;/code&gt;，提供了将R对象转换为JSON的&lt;code class=&quot;highlighter-rouge&quot;&gt;serializeJSON(x, digits = 8, pretty = FALSE)&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;unserializeJSON(txt)&lt;/code&gt;。同时，库里还提供了base64的解编码函数。&lt;/p&gt;
+
+    &lt;p&gt;综上所述，&lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt;成为了R下读写JSON的不二选择，当然我也不拦着你用&lt;code class=&quot;highlighter-rouge&quot;&gt;RJSONIO&lt;/code&gt;。&lt;/p&gt;
+
+    &lt;h2 id=&quot;how-jsonlite&quot;&gt;How &lt;em&gt;jsonlite&lt;/em&gt;&lt;/h2&gt;
+
+    &lt;p&gt;考虑到写出JSON的内容是不言自明的，下面主要讨论读入JSON的内容。&lt;/p&gt;
+
+    &lt;div class=&quot;alert-box info &quot;&gt;&lt;p&gt;以下内容需要阅读R的str函数的原始输出&lt;/p&gt;
+&lt;/div&gt;
+
+    &lt;h3 id=&quot;section-1&quot;&gt;简单的读入&lt;/h3&gt;
+    &lt;p&gt;我们以读入新加坡天气的metadata为例，展示这一过程：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsonlite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readLines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'../SG-Weather/metadata/2017-01-AirTemperature.json'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## List of 3
+##  $ stations    :'data.frame':  18 obs. of  4 variables:
+##   ..$ device_id: chr [1:18] &quot;S109&quot; &quot;S117&quot; &quot;S107&quot; &quot;S43&quot; ...
+##   ..$ location :'data.frame':  18 obs. of  2 variables:
+##   .. ..$ latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+##   .. ..$ longitude: num [1:18] 104 104 104 104 104 ...
+##   ..$ name     : chr [1:18] &quot;Ang Mo Kio Avenue 5&quot; &quot;Banyan Road&quot; &quot;East Coast Parkway&quot; &quot;Kim Chuan Road&quot; ...
+##   ..$ id       : chr [1:18] &quot;S109&quot; &quot;S117&quot; &quot;S107&quot; &quot;S43&quot; ...
+##  $ reading_unit: chr &quot;deg C&quot;
+##  $ reading_type: chr &quot;DBT 1M F&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;这里注意到&lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt;已经把读入的数据进行了化简，&lt;code class=&quot;highlighter-rouge&quot;&gt;stations&lt;/code&gt;已经被转换为了&lt;code class=&quot;highlighter-rouge&quot;&gt;data.frame&lt;/code&gt;：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stations&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;##    device_id location.latitude location.longitude                    name
+## 1       S109           1.37640           103.8492     Ang Mo Kio Avenue 5
+## 2       S117           1.25600           103.6790             Banyan Road
+## 3       S107           1.31350           103.9625      East Coast Parkway
+## 4        S43           1.33990           103.8878          Kim Chuan Road
+## 5       S108           1.27990           103.8703    Marina Gardens Drive
+## 6        S44           1.34583           103.6817          Nanyang Avenue
+## 7       S121           1.37288           103.7224  Old Choa Chu Kang Road
+## 8       S106           1.41680           103.9673              Pulau Ubin
+## 9        S06           1.35240           103.9007                     S06
+## 10      S102           1.18900           103.7680        Semakau Landfill
+## 11      S122           1.41731           103.8249          Sembawang Road
+## 12       S96           1.31750           104.0307  Tanah Merah Coast Road
+## 13      S115           1.29377           103.6184     Tuas South Avenue 3
+## 14      S24B           1.36780           103.9980 Upper Changi Road North
+## 15       S24           1.36780           103.9826 Upper Changi Road North
+## 16      S116           1.28100           103.7540      West Coast Highway
+## 17      S104           1.44387           103.7854      Woodlands Avenue 9
+## 18      S100           1.41720           103.7485          Woodlands Road
+##      id
+## 1  S109
+## 2  S117
+## 3  S107
+## 4   S43
+## 5  S108
+## 6   S44
+## 7  S121
+## 8  S106
+## 9   S06
+## 10 S102
+## 11 S122
+## 12  S96
+## 13 S115
+## 14 S24B
+## 15  S24
+## 16 S116
+## 17 S104
+## 18 S100&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;这个功能是很好，如果我们强制不使用化简功能的读入结果是这样的：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;simplifyVector&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## List of 3
+##  $ stations    :List of 18
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S109&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.38
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Ang Mo Kio Avenue 5&quot;
+##   .. ..$ id       : chr &quot;S109&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S117&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.26
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Banyan Road&quot;
+##   .. ..$ id       : chr &quot;S117&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S107&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.31
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;East Coast Parkway&quot;
+##   .. ..$ id       : chr &quot;S107&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S43&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.34
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Kim Chuan Road&quot;
+##   .. ..$ id       : chr &quot;S43&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S108&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.28
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Marina Gardens Drive&quot;
+##   .. ..$ id       : chr &quot;S108&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S44&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.35
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Nanyang Avenue&quot;
+##   .. ..$ id       : chr &quot;S44&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S121&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.37
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Old Choa Chu Kang Road&quot;
+##   .. ..$ id       : chr &quot;S121&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S106&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.42
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Pulau Ubin&quot;
+##   .. ..$ id       : chr &quot;S106&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S06&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.35
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;S06&quot;
+##   .. ..$ id       : chr &quot;S06&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S102&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.19
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Semakau Landfill&quot;
+##   .. ..$ id       : chr &quot;S102&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S122&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.42
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Sembawang Road&quot;
+##   .. ..$ id       : chr &quot;S122&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S96&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.32
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Tanah Merah Coast Road&quot;
+##   .. ..$ id       : chr &quot;S96&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S115&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.29
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Tuas South Avenue 3&quot;
+##   .. ..$ id       : chr &quot;S115&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S24B&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.37
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Upper Changi Road North&quot;
+##   .. ..$ id       : chr &quot;S24B&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S24&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.37
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Upper Changi Road North&quot;
+##   .. ..$ id       : chr &quot;S24&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S116&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.28
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;West Coast Highway&quot;
+##   .. ..$ id       : chr &quot;S116&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S104&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.44
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Woodlands Avenue 9&quot;
+##   .. ..$ id       : chr &quot;S104&quot;
+##   ..$ :List of 4
+##   .. ..$ device_id: chr &quot;S100&quot;
+##   .. ..$ location :List of 2
+##   .. .. ..$ latitude : num 1.42
+##   .. .. ..$ longitude: num 104
+##   .. ..$ name     : chr &quot;Woodlands Road&quot;
+##   .. ..$ id       : chr &quot;S100&quot;
+##  $ reading_unit: chr &quot;deg C&quot;
+##  $ reading_type: chr &quot;DBT 1M F&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;可以看到这就是文件原始的结构，读入这样的文件当然我们更希望的是获得一个已经化简的结果。这也是为什么上面一直强调化简的原因。&lt;/p&gt;
+
+    &lt;h3 id=&quot;section-2&quot;&gt;压平数据&lt;/h3&gt;
+    &lt;p&gt;细心的读者应该看到上面化简完的结果里（注意看str的输出），&lt;code class=&quot;highlighter-rouge&quot;&gt;location&lt;/code&gt;是单一的一列，而下面下属两个子列。我将上述代码再执行一次：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## List of 3
+##  $ stations    :'data.frame':  18 obs. of  4 variables:
+##   ..$ device_id: chr [1:18] &quot;S109&quot; &quot;S117&quot; &quot;S107&quot; &quot;S43&quot; ...
+##   ..$ location :'data.frame':  18 obs. of  2 variables:
+##   .. ..$ latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+##   .. ..$ longitude: num [1:18] 104 104 104 104 104 ...
+##   ..$ name     : chr [1:18] &quot;Ang Mo Kio Avenue 5&quot; &quot;Banyan Road&quot; &quot;East Coast Parkway&quot; &quot;Kim Chuan Road&quot; ...
+##   ..$ id       : chr [1:18] &quot;S109&quot; &quot;S117&quot; &quot;S107&quot; &quot;S43&quot; ...
+##  $ reading_unit: chr &quot;deg C&quot;
+##  $ reading_type: chr &quot;DBT 1M F&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;  ..$ location :'data.frame': 18 obs. of  2 variables:
+    .. ..$ latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+    .. ..$ longitude: num [1:18] 104 104 104 104 104 ...&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;注意到了吧，&lt;code class=&quot;highlighter-rouge&quot;&gt;location&lt;/code&gt;一列是两层结构，访问时需要这样操作：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;latitude&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;##  [1] 1.37640 1.25600 1.31350 1.33990 1.27990 1.34583 1.37288 1.41680
+##  [9] 1.35240 1.18900 1.41731 1.31750 1.29377 1.36780 1.36780 1.28100
+## [17] 1.44387 1.41720&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;这样的结构对于&lt;code class=&quot;highlighter-rouge&quot;&gt;dplyr&lt;/code&gt;一类的工具可能就不是很方便了，比如：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dplyr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stations&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;%&amp;gt;%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summarise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lat&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;latitude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## Error: Each variable must be a 1d atomic vector or list.
+## Problem variables: 'location'&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;当然你可以先将数据转换程序要的格式，然后再做这个操作，不过&lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt;提供了压平功能就能直接解决后顾之忧。在需要的时候可以使用：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flatten&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## List of 3
+##  $ stations    :'data.frame':  18 obs. of  5 variables:
+##   ..$ device_id         : chr [1:18] &quot;S109&quot; &quot;S117&quot; &quot;S107&quot; &quot;S43&quot; ...
+##   ..$ name              : chr [1:18] &quot;Ang Mo Kio Avenue 5&quot; &quot;Banyan Road&quot; &quot;East Coast Parkway&quot; &quot;Kim Chuan Road&quot; ...
+##   ..$ id                : chr [1:18] &quot;S109&quot; &quot;S117&quot; &quot;S107&quot; &quot;S43&quot; ...
+##   ..$ location.latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+##   ..$ location.longitude: num [1:18] 104 104 104 104 104 ...
+##  $ reading_unit: chr &quot;deg C&quot;
+##  $ reading_type: chr &quot;DBT 1M F&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;可以看到，&lt;code class=&quot;highlighter-rouge&quot;&gt;stations&lt;/code&gt;已经压平了，&lt;code class=&quot;highlighter-rouge&quot;&gt;location&lt;/code&gt;变成了&lt;code class=&quot;highlighter-rouge&quot;&gt;location.latitude&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;location.longitude&lt;/code&gt;两列了。这一点从直接的打印上很难看出来：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stations&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;##    device_id                    name   id location.latitude
+## 1       S109     Ang Mo Kio Avenue 5 S109           1.37640
+## 2       S117             Banyan Road S117           1.25600
+## 3       S107      East Coast Parkway S107           1.31350
+## 4        S43          Kim Chuan Road  S43           1.33990
+## 5       S108    Marina Gardens Drive S108           1.27990
+## 6        S44          Nanyang Avenue  S44           1.34583
+## 7       S121  Old Choa Chu Kang Road S121           1.37288
+## 8       S106              Pulau Ubin S106           1.41680
+## 9        S06                     S06  S06           1.35240
+## 10      S102        Semakau Landfill S102           1.18900
+## 11      S122          Sembawang Road S122           1.41731
+## 12       S96  Tanah Merah Coast Road  S96           1.31750
+## 13      S115     Tuas South Avenue 3 S115           1.29377
+## 14      S24B Upper Changi Road North S24B           1.36780
+## 15       S24 Upper Changi Road North  S24           1.36780
+## 16      S116      West Coast Highway S116           1.28100
+## 17      S104      Woodlands Avenue 9 S104           1.44387
+## 18      S100          Woodlands Road S100           1.41720
+##    location.longitude
+## 1            103.8492
+## 2            103.6790
+## 3            103.9625
+## 4            103.8878
+## 5            103.8703
+## 6            103.6817
+## 7            103.7224
+## 8            103.9673
+## 9            103.9007
+## 10           103.7680
+## 11           103.8249
+## 12           104.0307
+## 13           103.6184
+## 14           103.9980
+## 15           103.9826
+## 16           103.7540
+## 17           103.7854
+## 18           103.7485&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;这也是为什么需要使用&lt;code class=&quot;highlighter-rouge&quot;&gt;str&lt;/code&gt;的原因，当然你也可以用&lt;code class=&quot;highlighter-rouge&quot;&gt;colnames(json$stations)&lt;/code&gt;来查看列名，不过这是个鸡生蛋的问题，既然你都知道结构了又何必去查看呢？&lt;/p&gt;
+
+    &lt;p&gt;有了这样的结构以后，&lt;code class=&quot;highlighter-rouge&quot;&gt;dplyr&lt;/code&gt;就能比较如鱼得水了：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stations&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;%&amp;gt;%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summarise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lat&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;location.latitude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;##        lat
+## 1 1.341603&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;h3 id=&quot;section-3&quot;&gt;其他功能&lt;/h3&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt;还有一些其他功能，值得一体的是校验JSON合法性的&lt;code class=&quot;highlighter-rouge&quot;&gt;validate&lt;/code&gt;:&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;validate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## [1] TRUE&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;还有一些直接从网络或者文件直接读取JSON的协助函数，比如&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;read_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;simplifyVector&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;注意到默认从文件读入关闭了化简功能以提高效率。&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'../SG-Weather/metadata/2017-01-AirTemperature.json'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;simplifyVector&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flatten&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## List of 3
+##  $ stations    :'data.frame':  18 obs. of  5 variables:
+##   ..$ device_id         : chr [1:18] &quot;S109&quot; &quot;S117&quot; &quot;S107&quot; &quot;S43&quot; ...
+##   ..$ name              : chr [1:18] &quot;Ang Mo Kio Avenue 5&quot; &quot;Banyan Road&quot; &quot;East Coast Parkway&quot; &quot;Kim Chuan Road&quot; ...
+##   ..$ id                : chr [1:18] &quot;S109&quot; &quot;S117&quot; &quot;S107&quot; &quot;S43&quot; ...
+##   ..$ location.latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+##   ..$ location.longitude: num [1:18] 104 104 104 104 104 ...
+##  $ reading_unit: chr &quot;deg C&quot;
+##  $ reading_type: chr &quot;DBT 1M F&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;可以看到以上结果和先读入再处理的结果是一样的。但是这两个函数的存在意义其实是不明的，因为&lt;code class=&quot;highlighter-rouge&quot;&gt;fromJSON&lt;/code&gt;本身就可以直接接收文件和网络地址输入：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'../SG-Weather/metadata/2017-01-AirTemperature.json'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flatten&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## List of 3
+##  $ stations    :'data.frame':  18 obs. of  5 variables:
+##   ..$ device_id         : chr [1:18] &quot;S109&quot; &quot;S117&quot; &quot;S107&quot; &quot;S43&quot; ...
+##   ..$ name              : chr [1:18] &quot;Ang Mo Kio Avenue 5&quot; &quot;Banyan Road&quot; &quot;East Coast Parkway&quot; &quot;Kim Chuan Road&quot; ...
+##   ..$ id                : chr [1:18] &quot;S109&quot; &quot;S117&quot; &quot;S107&quot; &quot;S43&quot; ...
+##   ..$ location.latitude : num [1:18] 1.38 1.26 1.31 1.34 1.28 ...
+##   ..$ location.longitude: num [1:18] 104 104 104 104 104 ...
+##  $ reading_unit: chr &quot;deg C&quot;
+##  $ reading_type: chr &quot;DBT 1M F&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;JSON的写出和base64相关的功能没有太多可说的，直接参看文档即可。&lt;/p&gt;
+
+    &lt;div class=&quot;alert-box warning &quot;&gt;&lt;p&gt;以下内容可以略过&lt;/p&gt;
+&lt;/div&gt;
+
+    &lt;h3 id=&quot;r&quot;&gt;序列化R对象&lt;/h3&gt;
+    &lt;p&gt;最后需要提一句序列化R对象的问题，&lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt;中可以使用如下两个函数完成这个工作：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;serializeJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;digits&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pretty&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unserializeJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;比如：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;serializeJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pretty&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;identical&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unserializeJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## [1] TRUE&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;当然这个东西不是万能的，比如ggplot的图像就不能做到序列化，还是老老实实的用save吧。&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ggplot2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ggplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mtcars&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;aes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mpg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cyl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;geom_point&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;serializeJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;identical&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unserializeJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;txt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## [1] FALSE&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+  &lt;/div&gt;&lt;/div&gt;
+</description>
+				<guid isPermaLink="true">https://longqi.ga/whyhow/whyhow.jsonlite/</guid>
+			</item>
+		
+			<item>
 				<title>打假：印度是强奸之国</title>
 				<link>https://longqi.ga/data/aboutindiarape/</link>
 				<pubDate>Wed, 15 Mar 2017 15:37:06 +0800</pubDate>
-				<description>&lt;div class=&quot;row&quot;&gt;
+				<description>
+&lt;div class=&quot;row&quot;&gt;
 &lt;div class=&quot;medium-4 medium-push-8 columns&quot;&gt;
     &lt;div class=&quot;panel radius&quot;&gt;
-      &lt;p id=&quot;toc&quot;&gt;&lt;strong&gt;Table of Contents&lt;/strong&gt;&lt;/p&gt;
+      &lt;p id=&quot;toc&quot;&gt;&lt;strong&gt;目录&lt;/strong&gt;&lt;/p&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;背景&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#section-1&quot; id=&quot;markdown-toc-section-1&quot;&gt;分析方法&lt;/a&gt;&lt;/li&gt;
@@ -27,6 +545,26 @@
   &lt;li&gt;&lt;a href=&quot;#section-7&quot; id=&quot;markdown-toc-section-7&quot;&gt;欧洲地区的数据&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#section-8&quot; id=&quot;markdown-toc-section-8&quot;&gt;各国的数据&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+      &lt;hr /&gt;
+
+      &lt;aside&gt;
+	&lt;div class=&quot;panel radius&quot; id=&quot;sidebar-quote&quot;&gt;
+		&lt;h3&gt;庄子·养生主&lt;/h3&gt;
+		&lt;p&gt;
+		吾生也有涯，而知也无涯。以有涯隨无涯，殆已；已而為知者，殆而已矣。為善无近名，為惡無近刑。緣督以為經，可以保身，可以全生，可以養親，可以盡年。
+		&lt;/p&gt;
+	&lt;/div&gt;
+
+  &lt;img class=&quot;b30&quot; src=&quot;/images/bear-300x300.jpg&quot; alt=&quot;&quot; /&gt;
+
+
+	&lt;div class=&quot;border-dotted radius b30&quot;&gt;
+		&lt;a href=&quot;//whyhow.tk&quot;&gt;&lt;img src=&quot;//www.whyhow.tk/public/logo.svg&quot; alt=&quot;姐妹站点&quot; /&gt;&lt;/a&gt;
+		&lt;p class=&quot;text-left&quot;&gt;
+			这是本站的&lt;a href=&quot;//whyhow.tk&quot;&gt;姐妹站点&lt;/a&gt;，热烈欢迎大家光临！
+		&lt;/p&gt;
+	&lt;/div&gt;
+&lt;/aside&gt;
 
     &lt;/div&gt;
   &lt;/div&gt;&lt;!-- /.medium-4.columns --&gt;
@@ -289,8 +827,7 @@
     &lt;script type=&quot;application/json&quot; data-for=&quot;htmlwidget-ecd882baa3c24726f681&quot;&gt;{&quot;x&quot;:{&quot;filter&quot;:&quot;top&quot;,&quot;filterHTML&quot;:&quot;&lt;tr&gt;\n  &lt;td&gt;&lt;\/td&gt;\n  &lt;td data-type=\&quot;character\&quot; style=\&quot;vertical-align: top;\&quot;&gt;\n    &lt;div class=\&quot;form-group has-feedback\&quot; style=\&quot;margin-bottom: auto;\&quot;&gt;\n      &lt;input type=\&quot;search\&quot; placeholder=\&quot;All\&quot; class=\&quot;form-control\&quot; style=\&quot;width: 100%;\&quot;/&gt;\n      &lt;span class=\&quot;glyphicon glyphicon-remove-circle form-control-feedback\&quot;&gt;&lt;\/span&gt;\n    &lt;\/div&gt;\n  &lt;\/td&gt;\n  &lt;td data-type=\&quot;number\&quot; style=\&quot;vertical-align: top;\&quot;&gt;\n    &lt;div class=\&quot;form-group has-feedback\&quot; style=\&quot;margin-bottom: auto;\&quot;&gt;\n      &lt;input type=\&quot;search\&quot; placeholder=\&quot;All\&quot; class=\&quot;form-control\&quot; style=\&quot;width: 100%;\&quot;/&gt;\n      &lt;span class=\&quot;glyphicon glyphicon-remove-circle form-control-feedback\&quot;&gt;&lt;\/span&gt;\n    &lt;\/div&gt;\n    &lt;div style=\&quot;display: none; position: absolute; width: 200px;\&quot;&gt;\n      &lt;div data-min=\&quot;0\&quot; data-max=\&quot;92.13\&quot; data-scale=\&quot;2\&quot;&gt;&lt;\/div&gt;\n      &lt;span style=\&quot;float: left;\&quot;&gt;&lt;\/span&gt;\n      &lt;span style=\&quot;float: right;\&quot;&gt;&lt;\/span&gt;\n    &lt;\/div&gt;\n  &lt;\/td&gt;\n  &lt;td data-type=\&quot;number\&quot; style=\&quot;vertical-align: top;\&quot;&gt;\n    &lt;div class=\&quot;form-group has-feedback\&quot; style=\&quot;margin-bottom: auto;\&quot;&gt;\n      &lt;input type=\&quot;search\&quot; placeholder=\&quot;All\&quot; class=\&quot;form-control\&quot; style=\&quot;width: 100%;\&quot;/&gt;\n      &lt;span class=\&quot;glyphicon glyphicon-remove-circle form-control-feedback\&quot;&gt;&lt;\/span&gt;\n    &lt;\/div&gt;\n    &lt;div style=\&quot;display: none; position: absolute; width: 200px;\&quot;&gt;\n      &lt;div data-min=\&quot;0\&quot; data-max=\&quot;91.9\&quot; data-scale=\&quot;2\&quot;&gt;&lt;\/div&gt;\n      &lt;span style=\&quot;float: left;\&quot;&gt;&lt;\/span&gt;\n      &lt;span style=\&quot;float: right;\&quot;&gt;&lt;\/span&gt;\n    &lt;\/div&gt;\n  &lt;\/td&gt;\n  &lt;td data-type=\&quot;number\&quot; style=\&quot;vertical-align: top;\&quot;&gt;\n    &lt;div class=\&quot;form-group has-feedback\&quot; style=\&quot;margin-bottom: auto;\&quot;&gt;\n      &lt;input type=\&quot;search\&quot; placeholder=\&quot;All\&quot; class=\&quot;form-control\&quot; style=\&quot;width: 100%;\&quot;/&gt;\n      &lt;span class=\&quot;glyphicon glyphicon-remove-circle form-control-feedback\&quot;&gt;&lt;\/span&gt;\n    &lt;\/div&gt;\n    &lt;div style=\&quot;display: none; position: absolute; width: 200px;\&quot;&gt;\n      &lt;div data-min=\&quot;0\&quot; data-max=\&quot;26.32\&quot; data-scale=\&quot;2\&quot;&gt;&lt;\/div&gt;\n      &lt;span style=\&quot;float: left;\&quot;&gt;&lt;\/span&gt;\n      &lt;span style=\&quot;float: right;\&quot;&gt;&lt;\/span&gt;\n    &lt;\/div&gt;\n  &lt;\/td&gt;\n&lt;\/tr&gt;&quot;,&quot;data&quot;:[[&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;90&quot;,&quot;91&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;],[&quot;Lesotho&quot;,&quot;Botswana&quot;,&quot;Swaziland&quot;,&quot;Sweden&quot;,&quot;St. Vincent and the Grenadines&quot;,&quot;Suriname&quot;,&quot;Zimbabwe&quot;,&quot;Costa Rica&quot;,&quot;St. Kitts and Nevis&quot;,&quot;United States of America*&quot;,&quot;United Kingdom (England and Wales)&quot;,&quot;Belgium&quot;,&quot;Jamaica&quot;,&quot;Bahamas&quot;,&quot;Nicaragua&quot;,&quot;New Zealand&quot;,&quot;Grenada&quot;,&quot;Guyana&quot;,&quot;United Kingdom (Northern Ireland)&quot;,&quot;Panama*&quot;,&quot;Peru&quot;,&quot;Barbados&quot;,&quot;Iceland&quot;,&quot;Cabo Verde&quot;,&quot;Bermuda&quot;,&quot;Bolivia (Plurinational State of)&quot;,&quot;United Kingdom (Scotland)*&quot;,&quot;Paraguay&quot;,&quot;Norway&quot;,&quot;Trinidad and Tobago&quot;,&quot;Chile&quot;,&quot;Brazil&quot;,&quot;Solomon Islands&quot;,&quot;Israel&quot;,&quot;France*&quot;,&quot;Honduras&quot;,&quot;Finland&quot;,&quot;Republic of Korea&quot;,&quot;Mongolia&quot;,&quot;Mexico*&quot;,&quot;Luxembourg&quot;,&quot;Ecuador&quot;,&quot;Belize&quot;,&quot;Kazakhstan&quot;,&quot;Netherlands*&quot;,&quot;Ireland&quot;,&quot;Estonia&quot;,&quot;Germany&quot;,&quot;Austria&quot;,&quot;Dominican Republic&quot;,&quot;Sri Lanka&quot;,&quot;Colombia&quot;,&quot;Burundi&quot;,&quot;Argentina&quot;,&quot;Bangladesh&quot;,&quot;Denmark&quot;,&quot;Switzerland*&quot;,&quot;Republic of Moldova&quot;,&quot;Uruguay&quot;,&quot;Brunei Darussalam&quot;,&quot;El Salvador*&quot;,&quot;Bhutan&quot;,&quot;Lithuania&quot;,&quot;Oman&quot;,&quot;Monaco&quot;,&quot;Czech Republic&quot;,&quot;Liechtenstein&quot;,&quot;Kyrgyzstan&quot;,&quot;Latvia&quot;,&quot;Thailand*&quot;,&quot;Kuwait&quot;,&quot;Romania*&quot;,&quot;Macao Special Administrative Region of China*&quot;,&quot;Poland&quot;,&quot;Mauritius&quot;,&quot;Philippines&quot;,&quot;Russian Federation&quot;,&quot;Croatia&quot;,&quot;Spain&quot;,&quot;Bulgaria&quot;,&quot;Lebanon&quot;,&quot;Morocco&quot;,&quot;Sudan&quot;,&quot;Portugal&quot;,&quot;Andorra&quot;,&quot;Senegal&quot;,&quot;Malta*&quot;,&quot;Slovenia&quot;,&quot;Guatemala&quot;,&quot;Singapore&quot;,&quot;Rwanda&quot;,&quot;Slovakia&quot;,&quot;Cyprus&quot;,&quot;Cameroon*&quot;,&quot;Belarus&quot;,&quot;Bahrain&quot;,&quot;Kenya&quot;,&quot;Hungary&quot;,&quot;Uganda&quot;,&quot;Georgia&quot;,&quot;The former Yugoslav Rep. of Macedonia&quot;,&quot;Turkey&quot;,&quot;Sao Tome and Principe&quot;,&quot;Sierra Leone&quot;,&quot;Kosovo under UNSCR 1244&quot;,&quot;Ukraine&quot;,&quot;India&quot;,&quot;Jordan&quot;,&quot;Greece&quot;,&quot;Maldives&quot;,&quot;Qatar&quot;,&quot;Canada*&quot;,&quot;Hong Kong Special Administrative Region of China&quot;,&quot;Puerto Rico*&quot;,&quot;Algeria*&quot;,&quot;State of Palestine&quot;,&quot;Albania&quot;,&quot;Montenegro&quot;,&quot;Japan&quot;,&quot;United Arab Emirates&quot;,&quot;Bosnia and Herzegovina&quot;,&quot;Serbia&quot;,&quot;Guinea&quot;,&quot;Indonesia&quot;,&quot;Nigeria&quot;,&quot;Nepal&quot;,&quot;Tajikistan&quot;,&quot;Turkmenistan&quot;,&quot;Syrian Arab Republic&quot;,&quot;Myanmar&quot;,&quot;Yemen&quot;,&quot;Armenia&quot;,&quot;Azerbaijan&quot;,&quot;Mozambique&quot;,&quot;Egypt&quot;,&quot;Holy See&quot;,&quot;Iraq (Central Iraq)&quot;],[92.13,89.05,74.85,50.84,46.58,41.85,33.85,33.18,31.83,30.97,29.32,29.13,28.68,28.55,28.17,27.71,27.16,25.28,25.21,24.98,24.48,24.08,23.66,23.65,22.76,21.76,21.09,20.2,19.56,19.36,18.68,18.45,18.18,17.36,16.78,16.73,14.86,12.95,12.87,12.62,12.36,11.8,11.26,10.88,10.85,10.14,9.72,9.68,9.49,9.25,8.64,8.33,8.26,8.22,8,7.72,7.71,7.46,7.37,7.1,6.89,6.78,6.34,6,5.9,5.84,5.77,5.69,5.47,5.29,4.73,4.66,4.61,4.59,4.57,4.46,4.32,4.19,3.97,3.8,3.61,3.56,3.5,3.43,3.35,3.3,3.22,3.19,3.16,2.87,2.85,2.84,2.75,2.7,2.68,2.62,2.62,2.59,2.41,2.26,2.23,2.18,2,1.95,1.91,1.9,1.86,1.75,1.72,1.71,1.7,1.62,1.48,1.4,1.31,1.22,1.2,1.15,1.14,1.14,0.96,0.92,0.9,0.87,0.8,0.75,0.72,0.7,0.67,0.66,0.62,0.36,0.35,0.27,0.08,0,null],[91.9,89.25,74.85,55.75,49.4,41.85,36.35,33.1,30.9,31.15,27.15,29.55,26.5,27.8,28,27,25.95,31.8,24.55,24.15,24.3,24.4,23.9,23.35,9.6,20.9,18.45,21.4,19.9,18.7,18.4,18.9,13.9,18.4,16.45,13.5,14.6,12.95,12.65,12.6,13,11.15,9.6,10.2,10.8,9.65,9.75,9.5,9.3,9.25,8.35,7.6,7.5,8.25,8,7.7,7.65,7.1,6.7,7.1,6.15,7.35,6.15,6,5.8,6,5.6,5.7,4.05,5.55,4.65,4.6,4.6,4.45,4.6,3.7,3.8,3.75,3.9,3.15,3.7,3.6,3.5,3.5,2.4,3.05,3,2.85,2.8,2.75,2.7,2.8,3,3,2.4,2.7,2.3,2.4,2.05,2,2,2.4,1.45,1.95,1.8,1.95,1.8,1.75,1.65,1.6,1.7,1.65,1.5,1.2,1.1,0.4,1.3,0.95,1.15,1.2,0.95,0.9,0.9,0.8,0.8,0.75,0.8,0.7,0.65,0.7,0.6,0.4,0.3,0.2,0.1,0,null],[2.96,2.72,3.75,13.85,18.86,5.3,5.86,2.79,3.69,3.15,7.61,1.5,3.29,6.13,3.65,2.52,8.35,12.56,4.68,3.92,3.36,3.84,3.41,2.38,26.32,7.42,6.1,2.44,2.38,3.92,1.5,4.81,10.76,2.58,0.9,5.86,3.28,0.64,1.53,0.33,2.41,2.1,4.51,3.27,2.65,3.2,2.11,0.62,1.19,9.12,1.38,3.12,1.63,0.1,0.14,1.61,0.75,1,1.23,0.44,1.64,1.51,1.3,1.27,2.95,0.63,4.74,0.21,3.56,2.39,0.5,0.37,0.59,0.81,1.01,1.89,1.36,1.51,1.13,1.87,0.69,1.75,null,0.32,2.71,1.84,0.86,0.8,0.81,0.51,0.58,0.95,0.89,0.81,1.38,0.62,0.85,0.93,0.94,1.06,0.87,0.46,1.37,0.78,0.51,0.25,0.29,0.35,0.32,1.08,0.14,0.15,0.26,0.57,0.63,1.26,0.29,0.69,0.58,0.24,0.15,0.37,null,0.21,0.42,0.07,0.12,0.12,0.12,0.21,0.13,0.15,0.12,0.12,0.04,0,null]],&quot;container&quot;:&quot;&lt;table class=\&quot;display\&quot;&gt;\n  &lt;thead&gt;\n    &lt;tr&gt;\n      &lt;th&gt; &lt;\/th&gt;\n      &lt;th&gt;Country&lt;\/th&gt;\n      &lt;th&gt;Mean&lt;\/th&gt;\n      &lt;th&gt;Median&lt;\/th&gt;\n      &lt;th&gt;SD&lt;\/th&gt;\n    &lt;\/tr&gt;\n  &lt;\/thead&gt;\n&lt;\/table&gt;&quot;,&quot;options&quot;:{&quot;pageLength&quot;:25,&quot;columnDefs&quot;:[{&quot;className&quot;:&quot;dt-right&quot;,&quot;targets&quot;:[2,3,4]},{&quot;orderable&quot;:false,&quot;targets&quot;:0}],&quot;order&quot;:[],&quot;autoWidth&quot;:false,&quot;orderClasses&quot;:false,&quot;orderCellsTop&quot;:true}},&quot;evals&quot;:[],&quot;jsHooks&quot;:[]}&lt;/script&gt;
 
     &lt;p&gt;最后，文中提到用鼠标查看数据是因为本文有一个基于plotly的版本确实可以看到数据，可以到&lt;a href=&quot;https://www.whyhow.tk/pages/indiarape.html&quot;&gt;这里查看&lt;/a&gt;。（友情提示：由于数据内嵌在网页中，这个网页有无情的13MB大）&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
+  &lt;/div&gt;&lt;/div&gt;
 </description>
 				<guid isPermaLink="true">https://longqi.ga/data/aboutindiarape/</guid>
 			</item>
@@ -321,10 +858,11 @@
 				<title>How to parallelize &lt;em&gt;do&lt;/em&gt; computation in &lt;em&gt;dplyr&lt;/em&gt;</title>
 				<link>https://longqi.ga/r/dplyrpar/</link>
 				<pubDate>Sat, 25 Feb 2017 23:20:29 +0800</pubDate>
-				<description>&lt;div class=&quot;row&quot;&gt;
+				<description>
+&lt;div class=&quot;row&quot;&gt;
 &lt;div class=&quot;medium-4 medium-push-8 columns&quot;&gt;
     &lt;div class=&quot;panel radius&quot;&gt;
-      &lt;p id=&quot;toc&quot;&gt;&lt;strong&gt;Table of Contents&lt;/strong&gt;&lt;/p&gt;
+      &lt;p id=&quot;toc&quot;&gt;&lt;strong&gt;目录&lt;/strong&gt;&lt;/p&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#introduction&quot; id=&quot;markdown-toc-introduction&quot;&gt;Introduction&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#preprocessing&quot; id=&quot;markdown-toc-preprocessing&quot;&gt;Preprocessing&lt;/a&gt;&lt;/li&gt;
@@ -334,6 +872,26 @@
   &lt;li&gt;&lt;a href=&quot;#a-workable-solution&quot; id=&quot;markdown-toc-a-workable-solution&quot;&gt;A workable solution&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#parallelize-it&quot; id=&quot;markdown-toc-parallelize-it&quot;&gt;Parallelize it&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+      &lt;hr /&gt;
+
+      &lt;aside&gt;
+	&lt;div class=&quot;panel radius&quot; id=&quot;sidebar-quote&quot;&gt;
+		&lt;h3&gt;庄子·养生主&lt;/h3&gt;
+		&lt;p&gt;
+		吾生也有涯，而知也无涯。以有涯隨无涯，殆已；已而為知者，殆而已矣。為善无近名，為惡無近刑。緣督以為經，可以保身，可以全生，可以養親，可以盡年。
+		&lt;/p&gt;
+	&lt;/div&gt;
+
+  &lt;img class=&quot;b30&quot; src=&quot;/images/bear-300x300.jpg&quot; alt=&quot;&quot; /&gt;
+
+
+	&lt;div class=&quot;border-dotted radius b30&quot;&gt;
+		&lt;a href=&quot;//whyhow.tk&quot;&gt;&lt;img src=&quot;//www.whyhow.tk/public/logo.svg&quot; alt=&quot;姐妹站点&quot; /&gt;&lt;/a&gt;
+		&lt;p class=&quot;text-left&quot;&gt;
+			这是本站的&lt;a href=&quot;//whyhow.tk&quot;&gt;姐妹站点&lt;/a&gt;，热烈欢迎大家光临！
+		&lt;/p&gt;
+	&lt;/div&gt;
+&lt;/aside&gt;
 
     &lt;/div&gt;
   &lt;/div&gt;&lt;!-- /.medium-4.columns --&gt;
@@ -667,8 +1225,7 @@
     &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# install.packages(&quot;devtools&quot;)
 &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;devtools&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;install_github&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hadley/multidplyr&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-  &lt;/div&gt;
-&lt;/div&gt;
+  &lt;/div&gt;&lt;/div&gt;
 </description>
 				<guid isPermaLink="true">https://longqi.ga/r/dplyrpar/</guid>
 			</item>

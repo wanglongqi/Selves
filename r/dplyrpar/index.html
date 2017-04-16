@@ -84,7 +84,7 @@
 	
 
 </head>
-<body id="top-of-page" class="post-toc">
+<body id="top-of-page" class="post-toc-left">
 	
 	<div id="navigation" class="sticky">
   <nav class="top-bar" role="navigation" data-topbar>
@@ -267,7 +267,7 @@
 			<header>
 				
 
-				<div itemprop="name">
+				<div itemprop="name"  class="medium-8">
 					
 					<h1>How to parallelize <em>do</em> computation in <em>dplyr</em></h1>
 				</div>
@@ -275,16 +275,19 @@
 
 
 			
+			<div class="medium-8">
 			<p class="teaser" itemprop="description">
 				<code>dplyr</code> is definitely a great tool for data analysis. However, it does not come with multi-core or multi-processor support. And here is we discuss about how to parallelize <code>dplyr</code> functions without too much efforts in rewriting the code to a parallel version.
 			</p>
+			</div>
 			
 
 			<div itemprop="articleSection">
-			<div class="row">
+			
+<div class="row">
 <div class="medium-4 medium-push-8 columns">
     <div class="panel radius">
-      <p id="toc"><strong>Table of Contents</strong></p>
+      <p id="toc"><strong>目录</strong></p>
 <ul id="markdown-toc">
   <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a>    <ul>
       <li><a href="#preprocessing" id="markdown-toc-preprocessing">Preprocessing</a></li>
@@ -294,6 +297,26 @@
   <li><a href="#a-workable-solution" id="markdown-toc-a-workable-solution">A workable solution</a></li>
   <li><a href="#parallelize-it" id="markdown-toc-parallelize-it">Parallelize it</a></li>
 </ul>
+      <hr />
+
+      <aside>
+	<div class="panel radius" id="sidebar-quote">
+		<h3>庄子·养生主</h3>
+		<p>
+		吾生也有涯，而知也无涯。以有涯隨无涯，殆已；已而為知者，殆而已矣。為善无近名，為惡無近刑。緣督以為經，可以保身，可以全生，可以養親，可以盡年。
+		</p>
+	</div>
+
+  <img class="b30" src="/images/bear-300x300.jpg" alt="" />
+
+
+	<div class="border-dotted radius b30">
+		<a href="//whyhow.tk"><img src="//www.whyhow.tk/public/logo.svg" alt="姐妹站点" /></a>
+		<p class="text-left">
+			这是本站的<a href="//whyhow.tk">姐妹站点</a>，热烈欢迎大家光临！
+		</p>
+	</div>
+</aside>
 
     </div>
   </div><!-- /.medium-4.columns -->
@@ -627,11 +650,12 @@
     <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># install.packages("devtools")
 </span><span class="n">devtools</span><span class="o">::</span><span class="n">install_github</span><span class="p">(</span><span class="s2">"hadley/multidplyr"</span><span class="p">)</span></code></pre></figure>
 
-  </div>
-</div>
+  </div></div>
 
+<!-- 	it seems jekyll will auto close the div	</div>
+				</div> -->
 			</div>
-
+			<div class="medium-8">
 			
 						<div id="page-meta" class="t30">
 				<p>
@@ -684,6 +708,7 @@
 
 
 			
+			</div>
 		</article>
 	</div><!-- /.medium-12.columns -->
 </div><!-- /.row -->
@@ -849,6 +874,11 @@
 </script>
 
 
+
+<script type="text/javascript" src="/assets/js/quote.js"></script>
+<script type="text/javascript">
+  $(document).ready(quoteHTML);
+</script>
 
 
 
