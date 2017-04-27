@@ -1,0 +1,975 @@
+<!doctype html>
+<html class="no-js" lang="zh_CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>VTK学习笔记（一）</title>
+
+    <link rel="stylesheet" type="text/css" href="https://longqi.ga/assets/css/styles_feeling_responsive.css">
+
+  
+
+	<script src="https://longqi.ga/assets/js/modernizr.min.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+	<script>
+		WebFont.load({
+			google: {
+				families: [ 'Lato:400,700,400italic:latin', 'Volkhov::latin' ]
+			}
+		});
+	</script>
+
+	<noscript>
+		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic%7CVolkhov' rel='stylesheet' type='text/css'>
+	</noscript>
+
+
+	<!-- Search Engine Optimization -->
+	<meta name="description" content="VTK是一套可视化工具箱，可以用来完成复杂的3D可视化，其中提供了大量的高级可视化功能，有一些现成的库可以调用VTK完成可视化，不过如果需要更底层的实现对于库的了解也是必不可少的。">
+	<meta name="google-site-verification" content="">
+	<meta name="msvalidate.01" content="" >
+	
+	<link rel="author" href="">
+	
+	
+	<link rel="canonical" href="https://longqi.ga/vtk/vtk-notes1/">
+
+
+	<!-- Facebook Open Graph -->
+	<meta property="og:title" content="VTK学习笔记（一）">
+	<meta property="og:description" content="VTK是一套可视化工具箱，可以用来完成复杂的3D可视化，其中提供了大量的高级可视化功能，有一些现成的库可以调用VTK完成可视化，不过如果需要更底层的实现对于库的了解也是必不可少的。">
+	<meta property="og:url" content="https://longqi.ga/vtk/vtk-notes1/">
+	<meta property="og:locale" content="zh_CN">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Why & How">
+	
+	
+
+
+	
+
+	<link type="text/plain" rel="author" href="https://longqi.ga/humans.txt">
+
+	
+
+	
+
+	<link rel="icon" sizes="32x32" href="https://longqi.ga/assets/img/favicon-32x32.png">
+
+	<link rel="icon" sizes="192x192" href="https://longqi.ga/assets/img/touch-icon-192x192.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://longqi.ga/assets/img/apple-touch-icon-180x180-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://longqi.ga/assets/img/apple-touch-icon-152x152-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://longqi.ga/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://longqi.ga/assets/img/apple-touch-icon-120x120-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://longqi.ga/assets/img/apple-touch-icon-114x114-precomposed.png">
+
+	
+	<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://longqi.ga/assets/img/apple-touch-icon-76x76-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://longqi.ga/assets/img/apple-touch-icon-72x72-precomposed.png">
+
+	<link rel="apple-touch-icon-precomposed" href="https://longqi.ga/assets/img/apple-touch-icon-precomposed.png">	
+
+	<meta name="msapplication-TileImage" content="https://longqi.ga/assets/img/msapplication_tileimage.png">
+
+	<meta name="msapplication-TileColor" content="#fabb00">
+
+
+	
+
+</head>
+<body id="top-of-page" class="post-toc-left">
+	
+	<div id="navigation" class="sticky">
+  <nav class="top-bar" role="navigation" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+      <h1 class="show-for-small-only"><a href="https://longqi.ga" class="icon-tree"> Why & How</a></h1>
+    </li>
+       <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+      <li class="toggle-topbar menu-icon"><a href="#"><span>导航</span></a></li>
+    </ul>
+    <section class="top-bar-section">
+
+      <ul class="right">
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+            
+            
+              <li class="divider"></li>
+              <li><a  href="https://longqi.ga/search/">搜索</a></li>
+
+            
+            
+          
+        
+
+              
+
+          
+          
+            
+            
+              <li class="divider"></li>
+              <li><a  href="https://longqi.ga/contact/">与我联系</a></li>
+
+            
+            
+          
+        
+        
+      </ul>
+
+      <ul class="left">
+        
+
+              
+
+          
+          
+
+            
+            
+              <li><a  href="https://longqi.ga/">主页</a></li>
+              <li class="divider"></li>
+
+            
+            
+          
+        
+
+              
+
+          
+          
+
+            
+            
+
+              <li class="has-dropdown">
+                <a  href="https://longqi.ga/projects/">个人项目</a>
+
+                  <ul class="dropdown">
+                    
+
+                      
+
+                      <li><a  href="http://writetex.tk" target="_blank">WriteTeX</a></li>
+                    
+                  </ul>
+
+              </li>
+              <li class="divider"></li>
+            
+          
+        
+
+              
+
+          
+          
+
+            
+            
+
+              <li class="has-dropdown">
+                <a  href="https://longqi.ga/blog/">博客</a>
+
+                  <ul class="dropdown">
+                    
+
+                      
+
+                      <li><a  href="https://longqi.ga/blog/archive/">文章目录</a></li>
+                    
+                  </ul>
+
+              </li>
+              <li class="divider"></li>
+            
+          
+        
+
+              
+
+          
+          
+        
+
+              
+
+          
+          
+        
+        
+      </ul>
+    </section>
+  </nav>
+</div><!-- /#navigation -->
+
+	
+
+	
+
+<div id="masthead">
+	<div class="row">
+		<div class="small-12 columns">
+			<a id="logo" href="https://longqi.ga/" title="Why & How – Why &amp; How 崴&amp;灏">
+				<img src="https://longqi.ga/assets/img/logo.png" alt="Why & How – Why &amp; How 崴&amp;灏">
+			</a>
+		</div><!-- /.small-12.columns -->
+	</div><!-- /.row -->
+</div><!-- /#masthead -->
+
+
+
+
+
+
+
+
+
+
+	
+
+
+<div class="row t30">
+	<div class="medium-12 columns">
+		<article itemscope itemtype="http://schema.org/Article">
+			<header>
+				
+
+				<div itemprop="name"  class="medium-8">
+					
+					<h1>VTK学习笔记（一）</h1>
+				</div>
+			</header>
+
+
+			
+			<div class="medium-8">
+			<p class="teaser" itemprop="description">
+				VTK是一套可视化工具箱，可以用来完成复杂的3D可视化，其中提供了大量的高级可视化功能，有一些现成的库可以调用VTK完成可视化，不过如果需要更底层的实现对于库的了解也是必不可少的。
+			</p>
+			</div>
+			
+
+			<div itemprop="articleSection">
+			
+<div class="row">
+<div class="medium-4 medium-push-8 columns">
+    <div class="panel radius">
+      <p id="toc"><strong>目录</strong></p>
+<ul id="markdown-toc">
+  <li><a href="#section" id="markdown-toc-section">背景</a></li>
+  <li><a href="#vtk" id="markdown-toc-vtk">VTK的基本流程</a></li>
+  <li><a href="#vtk-1" id="markdown-toc-vtk-1">VTK教程一：显示一个圆锥</a></li>
+  <li><a href="#vtkobserver" id="markdown-toc-vtkobserver">VTK教程二：添加Observer</a></li>
+  <li><a href="#vtk-2" id="markdown-toc-vtk-2">VTK教程三：同时显然多个对象</a></li>
+  <li><a href="#vtkactors" id="markdown-toc-vtkactors">VTK教程四：添加多个Actors</a></li>
+</ul>
+      <hr />
+
+      <aside>
+	<div class="panel radius" id="sidebar-quote">
+		<h3>庄子·养生主</h3>
+		<p>
+		吾生也有涯，而知也无涯。以有涯隨无涯，殆已；已而為知者，殆而已矣。為善无近名，為惡無近刑。緣督以為經，可以保身，可以全生，可以養親，可以盡年。
+		</p>
+	</div>
+<!-- 
+  <img class="b30" src="/images/bear-300x300.jpg" alt="">
+	<div class="border-dotted radius b30">
+		<a href="//whyhow.tk"><img src="//www.whyhow.tk/public/logo.svg" alt="姐妹站点"></a>
+		<p class="text-left">
+			这是本站的<a href="//whyhow.tk">姐妹站点</a>，热烈欢迎大家光临！
+		</p>
+	</div> -->
+</aside>
+
+    </div>
+  </div><!-- /.medium-4.columns -->
+
+
+
+<div class="medium-8 medium-pull-4 columns">
+
+    <h2 id="section">背景</h2>
+    <p>背景不做介绍了，VTK是非常有名的可视化工具箱，具体可到VTK的官网查询。下面是官网对自己的简要介绍：</p>
+
+    <blockquote>
+      <p>VTK is an open-source software system for image processing, 3D
+graphics, volume rendering and visualization. VTK includes many
+advanced algorithms (e.g., surface reconstruction, implicit modelling,
+decimation) and rendering techniques (e.g., hardware-accelerated
+volume rendering, LOD control).</p>
+    </blockquote>
+
+    <p>VTK可以运行在诸多环境下，从Windows, Linux 到 iOS, Android都可以运行，这点应该还是非常吸引人的。</p>
+
+    <h2 id="vtk">VTK的基本流程</h2>
+    <p>VTK的渲染流程如下：</p>
+
+    <p>source -&gt; mapper -&gt; actor -&gt; renderer -&gt; renderwindow</p>
+
+    <p>所以一个基本的VTK程序会比其他可视化库来得复杂。</p>
+
+    <p>VTK通过Pipeline实现不同的可视化，这需要用到大量的filter和mapper。</p>
+
+    <div class="alert-box warning "><p>自6.0开始VTK的data object和pipeline彻底分离了，这个将导致6.0以前的代码出现兼容性问题。</p>
+</div>
+
+    <p>VTK自带一些简单的教程，讲解了关于VTK的一些基本操作。我们这里简单的过一遍，到六个案例都过完之后大家会发现其实这个教程的质量<em>并不很好</em>。这是因为这六个案例过完之后你了解的仅仅是VTK的一些皮毛，当然你大概知道了VTK的流程，但是VTK之所以被叫做VTK的可视化功能的核心在这六个案例里完全没有提到。不过古话说得好：</p>
+
+    <blockquote>
+      <p>千里之行 始于足下</p>
+    </blockquote>
+
+    <p>我们花两个网页的篇幅简单的过一下这六个案例，在案例代码中我添加了一些评注，希望有点帮助。</p>
+
+    <h2 id="vtk-1">VTK教程一：显示一个圆锥</h2>
+    <p>下面引用VTK教程里面的第一个案例（略微添加了一些注释）：</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#!/usr/bin/env python</span>
+<span class="c">#</span>
+<span class="c"># This example creates a polygonal model of a cone, and then renders it to</span>
+<span class="c"># the screen. It will rotate the cone 360 degrees and then exit. The basic</span>
+<span class="c"># setup of source -&gt; mapper -&gt; actor -&gt; renderer -&gt; renderwindow is</span>
+<span class="c"># typical of most VTK programs.</span>
+<span class="c"># 这个案例建立一个圆锥，然后在屏幕上渲染它，并旋转360度。</span>
+<span class="c">#</span>
+
+<span class="c">#</span>
+<span class="c"># First we include the VTK Python packages that will make available</span>
+<span class="c"># all of the VTK commands to Python.</span>
+<span class="c">#</span>
+<span class="kn">import</span> <span class="nn">vtk</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="c">#</span>
+<span class="c"># Next we create an instance of vtkConeSource and set some of its</span>
+<span class="c"># properties. The instance of vtkConeSource "cone" is part of a visualization</span>
+<span class="c"># pipeline (it is a source process object); it produces data (output type is</span>
+<span class="c"># vtkPolyData) which other filters may process.</span>
+<span class="c"># 案例使用内嵌的ConSource生成圆锥</span>
+<span class="c">#</span>
+<span class="n">cone</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkConeSource</span><span class="p">()</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetHeight</span><span class="p">(</span> <span class="mf">3.0</span> <span class="p">)</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetRadius</span><span class="p">(</span> <span class="mf">1.0</span> <span class="p">)</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetResolution</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># In this example we terminate the pipeline with a mapper process object.</span>
+<span class="c"># (Intermediate filters such as vtkShrinkPolyData could be inserted in</span>
+<span class="c"># between the source and the mapper.)  We create an instance of</span>
+<span class="c"># vtkPolyDataMapper to map the polygonal data into graphics primitives. We</span>
+<span class="c"># connect the output of the cone souece to the input of this mapper.</span>
+<span class="c"># 这里讲这个算例没有添加filter</span>
+<span class="c">#</span>
+<span class="n">coneMapper</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkPolyDataMapper</span><span class="p">()</span>
+<span class="n">coneMapper</span><span class="o">.</span><span class="n">SetInputConnection</span><span class="p">(</span> <span class="n">cone</span><span class="o">.</span><span class="n">GetOutputPort</span><span class="p">()</span> <span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Create an actor to represent the cone. The actor orchestrates rendering of</span>
+<span class="c"># the mapper's graphics primitives. An actor also refers to properties via a</span>
+<span class="c"># vtkProperty instance, and includes an internal transformation matrix. We</span>
+<span class="c"># set this actor's mapper to be coneMapper which we created above.</span>
+<span class="c"># 这里讲Actor可以用来修改属性和包含一个变换矩阵</span>
+<span class="c">#</span>
+<span class="n">coneActor</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkActor</span><span class="p">()</span>
+<span class="n">coneActor</span><span class="o">.</span><span class="n">SetMapper</span><span class="p">(</span> <span class="n">coneMapper</span> <span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Create the Renderer and assign actors to it. A renderer is like a</span>
+<span class="c"># viewport. It is part or all of a window on the screen and it is</span>
+<span class="c"># responsible for drawing the actors it has.  We also set the background</span>
+<span class="c"># color here</span>
+<span class="c"># renderer类似于其他软件里的viewport，可以设置一些背景之类的属性。</span>
+<span class="c">#</span>
+<span class="n">ren1</span><span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkRenderer</span><span class="p">()</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span> <span class="n">coneActor</span> <span class="p">)</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">SetBackground</span><span class="p">(</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span> <span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Finally we create the render window which will show up on the screen</span>
+<span class="c"># We put our renderer into the render window using AddRenderer. We also</span>
+<span class="c"># set the size to be 300 pixels by 300</span>
+<span class="c"># 这个是建立渲染窗口，大小为300x300</span>
+<span class="c">#</span>
+<span class="n">renWin</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkRenderWindow</span><span class="p">()</span>
+<span class="n">renWin</span><span class="o">.</span><span class="n">AddRenderer</span><span class="p">(</span> <span class="n">ren1</span> <span class="p">)</span>
+<span class="n">renWin</span><span class="o">.</span><span class="n">SetSize</span><span class="p">(</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span> <span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># now we loop over 360 degreeees and render the cone each time</span>
+<span class="c"># 这个是旋转360度</span>
+<span class="c">#</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">360</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.03</span><span class="p">)</span>
+
+    <span class="n">renWin</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span>
+    <span class="n">ren1</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span><span class="o">.</span><span class="n">Azimuth</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span></code></pre></figure>
+
+    <h2 id="vtkobserver">VTK教程二：添加Observer</h2>
+
+    <p>教程二介绍了observer，相当于其他软件里面的Event Handler。下面是教程二的代码，新内容很少：</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#!/usr/bin/env python</span>
+<span class="c">#</span>
+<span class="c">#</span>
+<span class="c"># This example shows how to add an observer to a Python program. It extends</span>
+<span class="c"># the Step1/Python/Cone.py Python example (see that example for information on</span>
+<span class="c"># the basic setup).</span>
+<span class="c">#</span>
+<span class="c"># VTK uses a command/observer design pattern. That is, observers watch for</span>
+<span class="c"># particular events that any vtkObject (or subclass) may invoke on</span>
+<span class="c"># itself. For example, the vtkRenderer invokes a "StartEvent" as it begins</span>
+<span class="c"># to render. Here we add an observer that invokes a command when this event</span>
+<span class="c"># is observed.</span>
+<span class="c"># 这一部分主要介绍observer，相当于eventhandler，会去监控event。</span>
+<span class="c">#</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">vtk</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="c">#</span>
+<span class="c"># define the callback</span>
+<span class="c">#</span>
+<span class="k">def</span> <span class="nf">myCallback</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Starting a render"</span><span class="p">)</span>
+
+
+<span class="c">#</span>
+<span class="c"># create the basic pipeline as in Step1</span>
+<span class="c">#</span>
+<span class="n">cone</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkConeSource</span><span class="p">()</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetHeight</span><span class="p">(</span> <span class="mf">3.0</span> <span class="p">)</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetRadius</span><span class="p">(</span> <span class="mf">1.0</span> <span class="p">)</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetResolution</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+
+<span class="n">coneMapper</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkPolyDataMapper</span><span class="p">()</span>
+<span class="n">coneMapper</span><span class="o">.</span><span class="n">SetInputConnection</span><span class="p">(</span> <span class="n">cone</span><span class="o">.</span><span class="n">GetOutputPort</span><span class="p">()</span> <span class="p">)</span>
+<span class="n">coneActor</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkActor</span><span class="p">()</span>
+<span class="n">coneActor</span><span class="o">.</span><span class="n">SetMapper</span><span class="p">(</span> <span class="n">coneMapper</span> <span class="p">)</span>
+
+<span class="n">ren1</span><span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkRenderer</span><span class="p">()</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span> <span class="n">coneActor</span> <span class="p">)</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">SetBackground</span><span class="p">(</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span> <span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Add the observer here</span>
+<span class="c"># observer是添加在render上面的，监控的也是render的event</span>
+<span class="c">#</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">AddObserver</span><span class="p">(</span><span class="s">"StartEvent"</span><span class="p">,</span> <span class="n">myCallback</span><span class="p">)</span>
+
+<span class="n">renWin</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkRenderWindow</span><span class="p">()</span>
+<span class="n">renWin</span><span class="o">.</span><span class="n">AddRenderer</span><span class="p">(</span> <span class="n">ren1</span> <span class="p">)</span>
+<span class="n">renWin</span><span class="o">.</span><span class="n">SetSize</span><span class="p">(</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span> <span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># now we loop over 360 degreeees and render the cone each time</span>
+<span class="c">#</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">360</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.03</span><span class="p">)</span>
+    <span class="n">renWin</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span>
+    <span class="n">ren1</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span><span class="o">.</span><span class="n">Azimuth</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span></code></pre></figure>
+
+    <h2 id="vtk-2">VTK教程三：同时显然多个对象</h2>
+    <p>教程三主要解决多个render的问题，这样可以在一个窗口里添加多个render。属于一个比较重要的功能。下面是教程三的代码：</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#!/usr/bin/env python</span>
+<span class="c">#</span>
+<span class="c"># This example demonstrates how to use multiple renderers within a</span>
+<span class="c"># render window. It is a variation of the Cone.py example. Please</span>
+<span class="c"># refer to that example for additional documentation.</span>
+<span class="c"># 可视化内容还是基于教程一</span>
+<span class="c">#</span>
+
+<span class="kn">import</span> <span class="nn">vtk</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="c">#</span>
+<span class="c"># Next we create an instance of vtkConeSource and set some of its</span>
+<span class="c"># properties. The instance of vtkConeSource "cone" is part of a visualization</span>
+<span class="c"># pipeline (it is a source process object); it produces data (output type is</span>
+<span class="c"># vtkPolyData) which other filters may process.</span>
+<span class="c"># 产生一个圆锥对象，这个对象会在后面多次用到，这也说明VTK里一个对象是可以被多次按照</span>
+<span class="c"># 不同方式render的</span>
+<span class="c">#</span>
+<span class="n">cone</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkConeSource</span><span class="p">()</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetHeight</span><span class="p">(</span> <span class="mf">3.0</span> <span class="p">)</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetRadius</span><span class="p">(</span> <span class="mf">1.0</span> <span class="p">)</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetResolution</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># In this example we terminate the pipeline with a mapper process object.</span>
+<span class="c"># (Intermediate filters such as vtkShrinkPolyData could be inserted in</span>
+<span class="c"># between the source and the mapper.)  We create an instance of</span>
+<span class="c"># vtkPolyDataMapper to map the polygonal data into graphics primitives. We</span>
+<span class="c"># connect the output of the cone souece to the input of this mapper.</span>
+<span class="c">#</span>
+<span class="n">coneMapper</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkPolyDataMapper</span><span class="p">()</span>
+<span class="n">coneMapper</span><span class="o">.</span><span class="n">SetInputConnection</span><span class="p">(</span><span class="n">cone</span><span class="o">.</span><span class="n">GetOutputPort</span><span class="p">())</span>
+
+<span class="c">#</span>
+<span class="c"># Create an actor to represent the cone. The actor orchestrates rendering of</span>
+<span class="c"># the mapper's graphics primitives. An actor also refers to properties via a</span>
+<span class="c"># vtkProperty instance, and includes an internal transformation matrix. We</span>
+<span class="c"># set this actor's mapper to be coneMapper which we created above.</span>
+<span class="c"># 到这里都只有一个对象</span>
+<span class="c">#</span>
+<span class="n">coneActor</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkActor</span><span class="p">()</span>
+<span class="n">coneActor</span><span class="o">.</span><span class="n">SetMapper</span><span class="p">(</span><span class="n">coneMapper</span><span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Create two renderers and assign actors to them. A renderer renders into a</span>
+<span class="c"># viewport within the vtkRenderWindow. It is part or all of a window on the</span>
+<span class="c"># screen and it is responsible for drawing the actors it has.  We also set</span>
+<span class="c"># the background color here. In this example we are adding the same actor</span>
+<span class="c"># to two different renderers; it is okay to add different actors to</span>
+<span class="c"># different renderers as well.</span>
+<span class="c"># 将一个actor给了两个render，其中的SetViewport函数</span>
+<span class="c">#</span>
+<span class="c"># Specify the viewport for the Viewport to draw in the rendering window.#</span>
+<span class="c"># Coordinates are expressed as (xmin,ymin,xmax,ymax), where each coordinate is 0 &lt;= coordinate &lt;= 1.0.</span>
+<span class="c">#</span>
+<span class="c"># 注意到这里并没有旋转对象</span>
+<span class="c">#</span>
+<span class="n">ren1</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkRenderer</span><span class="p">()</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="n">coneActor</span><span class="p">)</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">SetBackground</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">SetViewport</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+<span class="n">ren2</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkRenderer</span><span class="p">()</span>
+<span class="n">ren2</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="n">coneActor</span><span class="p">)</span>
+<span class="n">ren2</span><span class="o">.</span><span class="n">SetBackground</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+<span class="n">ren2</span><span class="o">.</span><span class="n">SetViewport</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Finally we create the render window which will show up on the screen.</span>
+<span class="c"># We add our two renderers into the render window using AddRenderer. We also</span>
+<span class="c"># set the size to be 600 pixels by 300.</span>
+<span class="c">#</span>
+<span class="n">renWin</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkRenderWindow</span><span class="p">()</span>
+<span class="n">renWin</span><span class="o">.</span><span class="n">AddRenderer</span><span class="p">(</span> <span class="n">ren1</span> <span class="p">)</span>
+<span class="n">renWin</span><span class="o">.</span><span class="n">AddRenderer</span><span class="p">(</span> <span class="n">ren2</span> <span class="p">)</span>
+<span class="n">renWin</span><span class="o">.</span><span class="n">SetSize</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Make one camera view 90 degrees from other.</span>
+<span class="c"># 旋转对象是在这里完成的</span>
+<span class="c">#</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">ResetCamera</span><span class="p">()</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span><span class="o">.</span><span class="n">Azimuth</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Now we loop over 360 degreeees and render the cone each time.</span>
+<span class="c">#</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">360</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.03</span><span class="p">)</span>
+
+    <span class="n">renWin</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span>
+    <span class="n">ren1</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span><span class="o">.</span><span class="n">Azimuth</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
+    <span class="n">ren2</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span><span class="o">.</span><span class="n">Azimuth</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span></code></pre></figure>
+
+    <h2 id="vtkactors">VTK教程四：添加多个Actors</h2>
+
+    <p>上一个案例里同时显示了两个一样的圆锥，可以通过Actor修改圆锥的属性获得不同的渲染结果。这就是下面这个案例的目的。下面是第四个案例的代码：</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#!/usr/bin/env python</span>
+<span class="c">#</span>
+<span class="c"># This example demonstrates the creation of multiple actors and the</span>
+<span class="c"># manipulation of their properties and transformations. It is a</span>
+<span class="c"># derivative of Cone.py, see that example for more information.</span>
+<span class="c">#</span>
+
+<span class="kn">import</span> <span class="nn">vtk</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="c">#</span>
+<span class="c"># Next we create an instance of vtkConeSource and set some of its</span>
+<span class="c"># properties. The instance of vtkConeSource "cone" is part of a visualization</span>
+<span class="c"># pipeline (it is a source process object); it produces data (output type is</span>
+<span class="c"># vtkPolyData) which other filters may process.</span>
+<span class="c"># 还是一个对象</span>
+<span class="c">#</span>
+<span class="n">cone</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkConeSource</span> <span class="p">()</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetHeight</span><span class="p">(</span> <span class="mf">3.0</span> <span class="p">)</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetRadius</span><span class="p">(</span> <span class="mf">1.0</span> <span class="p">)</span>
+<span class="n">cone</span><span class="o">.</span><span class="n">SetResolution</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># In this example we terminate the pipeline with a mapper process object.</span>
+<span class="c"># (Intermediate filters such as vtkShrinkPolyData could be inserted in</span>
+<span class="c"># between the source and the mapper.)  We create an instance of</span>
+<span class="c"># vtkPolyDataMapper to map the polygonal data into graphics primitives. We</span>
+<span class="c"># connect the output of the cone source to the input of this mapper.</span>
+<span class="c">#</span>
+<span class="n">coneMapper</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkPolyDataMapper</span><span class="p">()</span>
+<span class="n">coneMapper</span><span class="o">.</span><span class="n">SetInputConnection</span><span class="p">(</span><span class="n">cone</span><span class="o">.</span><span class="n">GetOutputPort</span><span class="p">())</span>
+
+<span class="c">#</span>
+<span class="c"># Create an actor to represent the first cone. The actor's properties are</span>
+<span class="c"># modified to give it different surface properties. By default, an actor</span>
+<span class="c"># is create with a property so the GetProperty() method can be used.</span>
+<span class="c"># 此处设计很逆天，需要注意：</span>
+<span class="c">#</span>
+<span class="c"># vtkProperty* vtkActor::GetProperty  ()</span>
+<span class="c"># Set/Get the property object that controls this actors surface properties.#</span>
+<span class="c">#</span>
+<span class="c"># This should be an instance of a vtkProperty object. Every actor must have a property associated with it. If one isn't specified, then one will be generated automatically. Multiple actors can share one property object.</span>
+<span class="c">#</span>
+<span class="c"># 设置属性的第一步是 GetProperty，也有一个函数叫SetProperty，不过是用来直接使用Property对象设置的，后面会用到：</span>
+<span class="c">#</span>
+<span class="c"># void vtkActor::SetProperty  (   vtkProperty *   lut )</span>
+<span class="c"># Set/Get the property object that controls this actors surface properties.#</span>
+<span class="c">#</span>
+<span class="c"># This should be an instance of a vtkProperty object. Every actor must have a property associated with it. If one isn't specified, then one will be generated automatically. Multiple actors can share one property object.</span>
+<span class="c">#</span>
+<span class="n">coneActor</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkActor</span><span class="p">()</span>
+<span class="n">coneActor</span><span class="o">.</span><span class="n">SetMapper</span><span class="p">(</span><span class="n">coneMapper</span><span class="p">)</span>
+<span class="n">coneActor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetColor</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.63</span><span class="p">,</span> <span class="mf">0.79</span><span class="p">)</span>
+<span class="n">coneActor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetDiffuse</span><span class="p">(</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">coneActor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetSpecular</span><span class="p">(</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">coneActor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetSpecularPower</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Create a property and directly manipulate it. Assign it to the</span>
+<span class="c"># second actor.</span>
+<span class="c"># 新建一个Property对象</span>
+<span class="c">#</span>
+<span class="nb">property</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkProperty</span><span class="p">()</span>
+<span class="nb">property</span><span class="o">.</span><span class="n">SetColor</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.3882</span><span class="p">,</span> <span class="mf">0.2784</span><span class="p">)</span>
+<span class="nb">property</span><span class="o">.</span><span class="n">SetDiffuse</span><span class="p">(</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="nb">property</span><span class="o">.</span><span class="n">SetSpecular</span><span class="p">(</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="nb">property</span><span class="o">.</span><span class="n">SetSpecularPower</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Create a second actor and a property. The property is directly</span>
+<span class="c"># manipulated and then assigned to the actor. In this way, a single</span>
+<span class="c"># property can be shared among many actors. Note also that we use the</span>
+<span class="c"># same mapper as the first actor did. This way we avoid duplicating</span>
+<span class="c"># geometry, which may save lots of memory if the geoemtry is large.</span>
+<span class="c"># 这个地方强调了使用的是同一个mapper可以省内存</span>
+<span class="n">coneActor2</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkActor</span><span class="p">()</span>
+<span class="n">coneActor2</span><span class="o">.</span><span class="n">SetMapper</span><span class="p">(</span><span class="n">coneMapper</span><span class="p">)</span>
+<span class="n">coneActor2</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetColor</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.63</span><span class="p">,</span> <span class="mf">0.79</span><span class="p">)</span>
+<span class="n">coneActor2</span><span class="o">.</span><span class="n">SetProperty</span><span class="p">(</span><span class="nb">property</span><span class="p">)</span>
+<span class="n">coneActor2</span><span class="o">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Create the Renderer and assign actors to it. A renderer is like a</span>
+<span class="c"># viewport. It is part or all of a window on the screen and it is responsible</span>
+<span class="c"># for drawing the actors it has.  We also set the background color here.</span>
+<span class="c"># 注意，这个算例没有使用两个actors，仅有一个viewport，而是直接使用SetPosition将两个对象分开，viewport是一个。</span>
+<span class="c">#</span>
+<span class="n">ren1</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkRenderer</span><span class="p">()</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="n">coneActor</span><span class="p">)</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="n">coneActor2</span><span class="p">)</span>
+<span class="n">ren1</span><span class="o">.</span><span class="n">SetBackground</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Finally we create the render window which will show up on the screen</span>
+<span class="c"># We put our renderer into the render window using AddRenderer. We also</span>
+<span class="c"># set the size to be 300 pixels by 300.</span>
+<span class="c">#</span>
+<span class="n">renWin</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">vtkRenderWindow</span><span class="p">()</span>
+<span class="n">renWin</span><span class="o">.</span><span class="n">AddRenderer</span><span class="p">(</span><span class="n">ren1</span><span class="p">)</span>
+<span class="n">renWin</span><span class="o">.</span><span class="n">SetSize</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Now we loop over 360 degreeees and render the cone each time.</span>
+<span class="c">#</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">360</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.03</span><span class="p">)</span>
+
+    <span class="n">renWin</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span>
+    <span class="n">ren1</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span><span class="o">.</span><span class="n">Azimuth</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span></code></pre></figure>
+
+    <p><strong>控制页面长度，此处分割。</strong></p>
+  </div></div>
+
+<!-- 	it seems jekyll will auto close the div	</div>
+				</div> -->
+			</div>
+			<div class="medium-8">
+			
+						<div id="page-meta" class="t30">
+				<p>
+					<!-- Look the author details up from the site config. -->
+					
+					<!-- Output author details if some exist. -->
+					
+
+				
+				<time class="icon-calendar pr20" datetime="2017-04-22T16:16:04+08:00" itemprop="datePublished"> 2017-04-22</time>
+				
+
+				<span class="icon-archive pr20"> VTK</span>
+				<br />
+				<span class="pr20"><span class="icon-price-tag pr10"> Python</span> <span class="icon-price-tag pr10"> Notes</span> <span class="icon-price-tag pr10"> VTK</span> </span>
+			</p>
+
+			
+			<div id="post-nav" class="row">
+				
+				<div class="small-5 columns"><a class="button small radius prev" href="https://longqi.ga/whyhow/whyhow.jsonlite/">&laquo; WHYHOW系列之json文件处理</a></div><!-- /.small-4.columns -->
+				
+				<div class="small-2 columns text-center"><a class="radius button small" href="https://longqi.ga/blog/archive/" title="Blog 目录">目录</a></div><!-- /.small-4.columns -->
+				
+				<div class="small-5 columns text-right"><a class="button small radius next" href="https://longqi.ga/vtk/vtk-notes2/">VTK学习笔记（二） &raquo;</a></div><!-- /.small-4.columns -->
+				
+			</div>
+			
+			</div><!--  /.page-meta -->
+
+			
+
+			
+						
+				<h3 id="comments" class="t60">评论</h3>
+			    <div id="disqus_thread"></div>
+			    <script type="text/javascript">
+			        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+			        var disqus_shortname = 'whyhow'; 
+			        var disqus_identifier = '/vtk/vtk-notes1/';
+
+			        /* * * DON'T EDIT BELOW THIS LINE * * */
+			        (function() {
+			            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+			        })();
+			    </script>
+			    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+			
+
+
+
+			
+			</div>
+		</article>
+	</div><!-- /.medium-12.columns -->
+</div><!-- /.row -->
+
+
+
+
+
+
+
+	
+	    <div id="up-to-top" class="row">
+      <div class="small-12 columns" style="text-align: right;">
+        <a class="iconfont" href="#top-of-page">&#xf108;</a>
+      </div><!-- /.small-12.columns -->
+    </div><!-- /.row -->
+
+
+    <footer id="footer-content" class="bg-grau">
+      <div id="footer">
+        <div class="row">
+          <div class="medium-6 large-5 columns">
+            <h5 class="shadow-black">关于本站</h5>
+
+            <p class="shadow-black">
+              以生之有涯随知之无涯，殆矣，然何为，为何为。
+              <a href="https://longqi.ga/info/">更多 ›</a>
+            </p>
+          </div><!-- /.large-6.columns -->
+
+
+          <div class="small-6 medium-3 large-3 large-offset-1 columns">
+            
+              
+                <h5 class="shadow-black">Services</h5>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+
+              <ul class="no-bullet shadow-black">
+              
+                
+                  <li >
+                    <a href="https://longqi.ga"  title=""></a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="https://longqi.ga/contact/"  title="Contact">Contact</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="https://longqi.ga/feed.xml"  title="Subscribe to RSS Feed">RSS</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="https://longqi.ga/atom.xml"  title="Subscribe to Atom Feed">Atom</a>
+                  </li>
+              
+                
+                  <li >
+                    <a href="https://longqi.ga/sitemap.xml"  title="Sitemap for Google Webmaster Tools">sitemap.xml</a>
+                  </li>
+              
+              </ul>
+          </div><!-- /.large-4.columns -->
+
+
+          <div class="small-6 medium-3 large-3 columns">
+            
+              
+                <h5 class="shadow-black">致谢</h5>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+
+            <ul class="no-bullet shadow-black">
+            
+              
+                <li >
+                  <a href="https://longqi.ga"  title=""></a>
+                </li>
+            
+              
+                <li class="theme" >
+                  <a href="http://phlow.de/" target="_blank"  title="Theme by PHLOW">Theme by PHLOW</a>
+                </li>
+            
+              
+                <li class="backend" >
+                  <a href="http://jekyllrb.com/" target="_blank"  title="Power by Jekyll">Power by Jekyll</a>
+                </li>
+            
+              
+                <li class="server" >
+                  <a href="http://github.com/" target="_blank"  title="Hosted on Github">Hosted on Github</a>
+                </li>
+            
+              
+                <li class="server" >
+                  <a href="http://cloudflare.com/" target="_blank"  title="CDN through Cloudflare">CDN through Cloudflare</a>
+                </li>
+            
+            </ul>
+          </div><!-- /.large-3.columns -->
+        </div><!-- /.row -->
+
+      </div><!-- /#footer -->
+
+
+      <div id="subfooter">
+        <nav class="row">
+          <section id="subfooter-left" class="small-12 medium-6 columns credits">
+            
+          </section>
+
+          <section id="subfooter-right" class="small-12 medium-6 columns">
+            <ul class="inline-list social-icons">
+            
+              <li><a href="http://github.com/wanglongqi" target="_blank" class="icon-github" title="GitHub"></a></li>
+            
+              <li><a href="http://whyhow.tk" target="_blank" class="icon-globe" title="Whyhow"></a></li>
+            
+              <li><a href="http://whyhow.tk" target="_blank" class="icon-cog" title="WriteTeX"></a></li>
+            
+              <li><a href="http://pyconsole.tk" target="_blank" class="icon-code" title="PyConsole"></a></li>
+            
+              <li><a href="https://github.com/wanglongqi/RoadProfile" target="_blank" class="icon-lab-flask" title="RoadProfile"></a></li>
+            
+            </ul>
+          </section>
+        </nav>
+      </div><!-- /#subfooter -->
+    </footer>
+
+	
+
+	
+
+
+<script src="https://longqi.ga/assets/js/javascript.min.js"></script>
+
+
+<script>
+    $("#masthead").backstretch("/images/ship.jpg", {fade: 700});
+    $("#masthead-with-text").backstretch("/images/ship.jpg", {fade: 700});
+</script>
+
+
+
+<script type="text/javascript" src="/assets/js/quote.js"></script>
+<script type="text/javascript">
+  $(document).ready(quoteHTML);
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-6527820-1', 'auto');
+  ga('require', 'displayfeatures');
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+

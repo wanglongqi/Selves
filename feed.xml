@@ -9,6 +9,861 @@
 		<atom:link href="https://longqi.ga/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>VTK学习笔记（二）</title>
+				<link>https://longqi.ga/vtk/vtk-notes2/</link>
+				<pubDate>Sat, 22 Apr 2017 20:20:08 +0800</pubDate>
+				<description>
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;medium-4 medium-push-8 columns&quot;&gt;
+    &lt;div class=&quot;panel radius&quot;&gt;
+      &lt;p id=&quot;toc&quot;&gt;&lt;strong&gt;目录&lt;/strong&gt;&lt;/p&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#vtk&quot; id=&quot;markdown-toc-vtk&quot;&gt;VTK教程五：窗口交互&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#vtk3d-widgets&quot; id=&quot;markdown-toc-vtk3d-widgets&quot;&gt;VTK教程六：3D Widgets&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;结语&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+      &lt;hr /&gt;
+
+      &lt;aside&gt;
+	&lt;div class=&quot;panel radius&quot; id=&quot;sidebar-quote&quot;&gt;
+		&lt;h3&gt;庄子·养生主&lt;/h3&gt;
+		&lt;p&gt;
+		吾生也有涯，而知也无涯。以有涯隨无涯，殆已；已而為知者，殆而已矣。為善无近名，為惡無近刑。緣督以為經，可以保身，可以全生，可以養親，可以盡年。
+		&lt;/p&gt;
+	&lt;/div&gt;
+&lt;!-- 
+  &lt;img class=&quot;b30&quot; src=&quot;/images/bear-300x300.jpg&quot; alt=&quot;&quot;&gt;
+	&lt;div class=&quot;border-dotted radius b30&quot;&gt;
+		&lt;a href=&quot;//whyhow.tk&quot;&gt;&lt;img src=&quot;//www.whyhow.tk/public/logo.svg&quot; alt=&quot;姐妹站点&quot;&gt;&lt;/a&gt;
+		&lt;p class=&quot;text-left&quot;&gt;
+			这是本站的&lt;a href=&quot;//whyhow.tk&quot;&gt;姐妹站点&lt;/a&gt;，热烈欢迎大家光临！
+		&lt;/p&gt;
+	&lt;/div&gt; --&gt;
+&lt;/aside&gt;
+
+    &lt;/div&gt;
+  &lt;/div&gt;&lt;!-- /.medium-4.columns --&gt;
+
+
+
+&lt;div class=&quot;medium-8 medium-pull-4 columns&quot;&gt;
+
+    &lt;p&gt;&lt;strong&gt;接前文&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;h2 id=&quot;vtk&quot;&gt;VTK教程五：窗口交互&lt;/h2&gt;
+    &lt;p&gt;前面所有的案例都没有交互，仅仅是渲染。这个案例终于要讨论交互了。下面是这个案例的代码：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# This example introduces the concepts of user interaction with VTK.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# First, a different interaction style (than the default) is defined.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Second, the interaction is started.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;vtk&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Next we create an instance of vtkConeSource and set some of its&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# properties. The instance of vtkConeSource &quot;cone&quot; is part of a visualization&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# pipeline (it is a source process object); it produces data (output type is&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkPolyData) which other filters may process.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 对象还是一样的&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkConeSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetRadius&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetResolution&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# In this example we terminate the pipeline with a mapper process object.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# (Intermediate filters such as vtkShrinkPolyData could be inserted in&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# between the source and the mapper.)  We create an instance of&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkPolyDataMapper to map the polygonal data into graphics primitives. We&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# connect the output of the cone souece to the input of this mapper.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkPolyDataMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetInputConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetOutputPort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Create an actor to represent the cone. The actor orchestrates rendering of&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# the mapper's graphics primitives. An actor also refers to properties via a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkProperty instance, and includes an internal transformation matrix. We&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# set this actor's mapper to be coneMapper which we created above.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Create the Renderer and assign actors to it. A renderer is like a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# viewport. It is part or all of a window on the screen and it is responsible&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# for drawing the actors it has.  We also set the background color here.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetBackground&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Finally we create the render window which will show up on the screen&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# We put our renderer into the render window using AddRenderer. We also&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# set the size to be 300 pixels by 300.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 前面都是一个样的&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# The vtkRenderWindowInteractor class watches for events (e.g., keypress,&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# mouse) in the vtkRenderWindow. These events are translated into&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# event invocations that VTK understands (see VTK/Common/vtkCommand.h&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# for all events that VTK processes). Then observers of these VTK&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# events can process them as appropriate.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 这里vtkRenderWindow没有直接Render而是交给了vtkRenderWindowInteractor来响应&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 键盘和鼠标响应&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderWindowInteractor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetRenderWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# By default the vtkRenderWindowInteractor instantiates an instance&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# of vtkInteractorStyle. vtkInteractorStyle translates a set of events&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# it observes into operations on the camera, actors, and/or properties&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# in the vtkRenderWindow associated with the vtkRenderWinodwInteractor.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Here we specify a particular interactor style.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 默认的鼠标设置比较不适合鼠标操作，这里开发者也把响应换成vtkInteractorStyleTrackballCamera了。&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;style&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkInteractorStyleTrackballCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetInteractorStyle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Unlike the previous scripts where we performed some operations and then&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# exited, here we leave an event loop running. The user can use the mouse&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# and keyboard to perform the operations on the scene according to the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# current interaction style.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 交互需要一个Event loop，跟其他GUI程序是一样的&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Initialize and start the event loop. Once the render window appears, mouse&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# in the window to move the camera. The Start() method executes an event&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# loop which listens to user mouse and keyboard events. Note that keypress-e&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# exits the event loop. (Look in vtkInteractorStyle.h for a summary of events, or&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# the appropriate Doxygen documentation.)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;关于鼠标和键盘的操作，此处将vtkInteractorStyle和vtkInteractorStyleTrackballCamera的注释拷贝如下：&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;@class   vtkInteractorStyle&lt;/p&gt;
+
+      &lt;p&gt;@brief   provide event-driven interface to the rendering window (defines trackball mode)&lt;/p&gt;
+
+      &lt;p&gt;vtkInteractorStyle is a base class implementing the majority of motion
+control routines and defines an event driven interface to support
+vtkRenderWindowInteractor. vtkRenderWindowInteractor implements
+platform dependent key/mouse routing and timer control, which forwards
+events in a neutral form to vtkInteractorStyle.&lt;/p&gt;
+
+      &lt;p&gt;vtkInteractorStyle implements the “joystick” style of interaction. That
+is, holding down the mouse keys generates a stream of events that cause
+continuous actions (e.g., rotate, translate, pan, zoom). (The class
+vtkInteractorStyleTrackball implements a grab and move style.) The event
+bindings for this class include the following:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Keypress j / Keypress t: toggle between joystick (position sensitive) and
+trackball (motion sensitive) styles. In joystick style, motion occurs
+continuously as long as a mouse button is pressed. In trackball style,
+motion occurs when the mouse button is pressed and the mouse pointer
+moves.&lt;/li&gt;
+        &lt;li&gt;Keypress c / Keypress a: toggle between camera and actor modes. In
+camera mode, mouse events affect the camera position and focal point. In
+actor mode, mouse events affect the actor that is under the mouse pointer.&lt;/li&gt;
+        &lt;li&gt;Button 1: rotate the camera around its focal point (if camera mode) or
+rotate the actor around its origin (if actor mode). The rotation is in the
+direction defined from the center of the renderer’s viewport towards
+the mouse position. In joystick mode, the magnitude of the rotation is
+determined by the distance the mouse is from the center of the render
+window.&lt;/li&gt;
+        &lt;li&gt;Button 2: pan the camera (if camera mode) or translate the actor (if
+actor mode). In joystick mode, the direction of pan or translation is
+from the center of the viewport towards the mouse position. In trackball
+mode, the direction of motion is the direction the mouse moves. (Note:
+with 2-button mice, pan is defined as &amp;lt;Shift&amp;gt;-Button 1.)&lt;/li&gt;
+        &lt;li&gt;Button 3: zoom the camera (if camera mode) or scale the actor (if
+actor mode). Zoom in/increase scale if the mouse position is in the top
+half of the viewport; zoom out/decrease scale if the mouse position is in
+the bottom half. In joystick mode, the amount of zoom is controlled by the
+distance of the mouse pointer from the horizontal centerline of the
+window.&lt;/li&gt;
+        &lt;li&gt;Keypress 3: toggle the render window into and out of stereo mode. By
+default, red-blue stereo pairs are created. Some systems support Crystal
+Eyes LCD stereo glasses; you have to invoke SetStereoTypeToCrystalEyes()
+on the rendering window.&lt;/li&gt;
+        &lt;li&gt;Keypress e: exit the application.&lt;/li&gt;
+        &lt;li&gt;Keypress f: fly to the picked point&lt;/li&gt;
+        &lt;li&gt;Keypress p: perform a pick operation. The render window interactor has
+an internal instance of vtkCellPicker that it uses to pick.&lt;/li&gt;
+        &lt;li&gt;Keypress r: reset the camera view along the current view
+direction. Centers the actors and moves the camera so that all actors are
+visible.&lt;/li&gt;
+        &lt;li&gt;Keypress s: modify the representation of all actors so that they are
+surfaces.&lt;/li&gt;
+        &lt;li&gt;Keypress u: invoke the user-defined function. Typically,
+this keypress will bring up an interactor that you can type commands in.
+Typing u calls UserCallBack() on the vtkRenderWindowInteractor, which
+invokes a vtkCommand::UserEvent. In other words, to define a user-defined
+callback, just add an observer to the vtkCommand::UserEvent on the
+vtkRenderWindowInteractor object.&lt;/li&gt;
+        &lt;li&gt;Keypress w: modify the representation of all actors so that they are
+wireframe.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;p&gt;vtkInteractorStyle can be subclassed to provide new interaction styles and
+a facility to override any of the default mouse/key operations which
+currently handle trackball or joystick styles is provided. Note that this
+class will fire a variety of events that can be watched using an observer,
+such as LeftButtonPressEvent, LeftButtonReleaseEvent,
+MiddleButtonPressEvent, MiddleButtonReleaseEvent, RightButtonPressEvent,
+RightButtonReleaseEvent, EnterEvent, LeaveEvent, KeyPressEvent,
+KeyReleaseEvent, CharEvent, ExposeEvent, ConfigureEvent, TimerEvent,
+MouseMoveEvent,&lt;/p&gt;
+
+    &lt;/blockquote&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;@class   vtkInteractorStyleTrackballCamera&lt;/p&gt;
+
+      &lt;p&gt;@brief   interactive manipulation of the camera&lt;/p&gt;
+
+      &lt;p&gt;vtkInteractorStyleTrackballCamera allows the user to interactively
+manipulate (rotate, pan, etc.) the camera, the viewpoint of the scene.  In
+trackball interaction, the magnitude of the mouse motion is proportional
+to the camera motion associated with a particular mouse binding. For
+example, small left-button motions cause small changes in the rotation of
+the camera around its focal point. For a 3-button mouse, the left button
+is for rotation, the right button for zooming, the middle button for
+panning, and ctrl + left button for spinning.  (With fewer mouse buttons,
+ctrl + shift + left button is for zooming, and shift + left button is for
+panning.)&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;h2 id=&quot;vtk3d-widgets&quot;&gt;VTK教程六：3D Widgets&lt;/h2&gt;
+    &lt;p&gt;该教程主要演示了vtkBoxWidget，其他Widget的用法也是类似的。教程的代码如下：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# This example introduces 3D widgets. 3D widgets take advantage of the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# event/observer design pattern introduced previously. They typically&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# have a particular representation in the scene which can be interactively&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# selected and manipulated using the mouse and keyboard. As the widgets&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# are manipulated, they in turn invoke events such as StartInteractionEvent,&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# InteractionEvent, and EndInteractionEvent which can be used to manipulate&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# the scene that the widget is embedded in. 3D widgets work in the context&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# of the event loop which was set up in the previous example.&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# First we import the VTK Python package that will make available all&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# of the VTK commands to Python.&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;vtk&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Next we create an instance of vtkConeSource and set some of its&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# properties. The instance of vtkConeSource &quot;cone&quot; is part of a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# visualization pipeline (it is a source process object); it produces&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# data (output type is vtkPolyData) which other filters may process.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkConeSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetRadius&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetResolution&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# In this example we terminate the pipeline with a mapper process object.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# (Intermediate filters such as vtkShrinkPolyData could be inserted in&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# between the source and the mapper.)  We create an instance of&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkPolyDataMapper to map the polygonal data into graphics primitives. We&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# connect the output of the cone souece to the input of this mapper.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkPolyDataMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetInputConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetOutputPort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Create an actor to represent the cone. The actor orchestrates rendering of&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# the mapper's graphics primitives. An actor also refers to properties via a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkProperty instance, and includes an internal transformation matrix. We&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# set this actor's mapper to be coneMapper which we created above.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Create the Renderer and assign actors to it. A renderer is like a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# viewport. It is part or all of a window on the screen and it is&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# responsible for drawing the actors it has.  We also set the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# background color here.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetBackground&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Finally we create the render window which will show up on the screen&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# We put our renderer into the render window using AddRenderer. We&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# also set the size to be 300 pixels by 300.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# The vtkRenderWindowInteractor class watches for events (e.g., keypress,&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# mouse) in the vtkRenderWindow. These events are translated into&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# event invocations that VTK understands (see VTK/Common/vtkCommand.h&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# for all events that VTK processes). Then observers of these VTK&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# events can process them as appropriate.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderWindowInteractor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetRenderWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# By default the vtkRenderWindowInteractor instantiates an instance&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# of vtkInteractorStyle. vtkInteractorStyle translates a set of events&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# it observes into operations on the camera, actors, and/or properties&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# in the vtkRenderWindow associated with the vtkRenderWinodwInteractor.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Here we specify a particular interactor style.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 前面和教程五是一样的&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;style&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkInteractorStyleTrackballCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetInteractorStyle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+&lt;span class=&quot;c&quot;&gt;# Here we use a vtkBoxWidget to transform the underlying coneActor (by&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# manipulating its transformation matrix). Many other types of widgets&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# are available for use, see the documentation for more details.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# The SetInteractor method is how 3D widgets are associated with the render&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# window interactor. Internally, SetInteractor sets up a bunch of callbacks&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# using the Command/Observer mechanism (AddObserver()). The place factor&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# controls the initial size of the widget with respect to the bounding box&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# of the input to the widget.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# SetPlaceFactor 的目的是：&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Set/Get a factor representing the scaling of the widget upon&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# placement (via the PlaceWidget() method). Normally the widget is&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# placed so that it just fits within the bounding box defined in&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# PlaceWidget(bounds). The PlaceFactor will make the widget larger&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# (PlaceFactor &amp;gt; 1) or smaller (PlaceFactor &amp;lt; 1). By default,&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# PlaceFactor is set to 0.5.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;boxWidget&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkBoxWidget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;boxWidget&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetInteractor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;boxWidget&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetPlaceFactor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Place the interactor initially. The input to a 3D widget is used to&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# initially position and scale the widget. The EndInteractionEvent is&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# observed which invokes the SelectPolygons callback.&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 下面是演示Widget的放置方法，首先需要设置SetProp3D，这是因为：&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Specify a vtkProp3D around which to place the widget. This is not&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# required, but if supplied, it is used to initially position the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# widget.&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;boxWidget&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetProp3D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;boxWidget&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PlaceWidget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Similar to Step2/Python/Cone2.py, we define a callback for&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# interaction.  As can be seen the callback takes two arguments.  The&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# first being the object that generates the event and the second&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# argument the event name (which is a string).&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 下面的Callback是可以随便编写的，这里是将Widget的变换矩阵更新到对象。注意到&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# GetTransform的并没有返回变换矩阵，而是直接修改了参数：&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# virtual void vtkBoxWidget::GetTransform (   vtkTransform *  t   )&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# virtual&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Retrieve a linear transform characterizing the transformation of the box.#&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Note that the transformation is relative to where PlaceWidget was initially called. This method modifies the transform provided. The transform can be used to control the position of vtkProp3D's, as well as other transformation operations (e.g., vtkTranformPolyData).&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;myCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;widget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event_string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkTransform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;boxWidget&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetTransform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;boxWidget&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetProp3D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetUserTransform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+&lt;span class=&quot;c&quot;&gt;# Now for every interaction event that is generated by the boxWidget,&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# call our callback function.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 建立Observer&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;boxWidget&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddObserver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;InteractionEvent&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;myCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Normally the user presses the &quot;i&quot; key to bring a 3D widget to&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# life. Here we will manually enable it so it appears with the cone.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 将Widget默认设置为开，可以按“i”键关闭&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;boxWidget&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;On&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Start the event loop.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;iren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;关于BoxWidget，下面是它的解释：&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;This 3D widget defines a region of interest that is represented by an arbitrarily oriented hexahedron with interior face angles of 90 degrees (orthogonal faces). The object creates 7 handles that can be moused on and manipulated. The first six correspond to the six faces, the seventh is in the center of the hexahedron. In addition, a bounding box outline is shown, the “faces” of which can be selected for object rotation or scaling. A nice feature of the object is that the vtkBoxWidget, like any 3D widget, will work with the current interactor style. That is, if vtkBoxWidget does not handle an event, then all other registered observers (including the interactor style) have an opportunity to process the event. Otherwise, the vtkBoxWidget will terminate the processing of the event that it handles.&amp;gt;&lt;/p&gt;
+
+      &lt;p&gt;大意是BoxWidget有七个手柄，六个在六个面上，另一个在中心。&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;To use this object, just invoke SetInteractor() with the argument of the method a vtkRenderWindowInteractor. You may also wish to invoke “PlaceWidget()” to initially position the widget. The interactor will act normally until the “i” key (for “interactor”) is pressed, at which point the vtkBoxWidget will appear. (See superclass documentation for information about changing this behavior.) By grabbing the six face handles (use the left mouse button), faces can be moved. By grabbing the center handle (with the left mouse button), the entire hexahedron can be translated. (Translation can also be employed by using the “shift-left-mouse-button” combination inside of the widget.) Scaling is achieved by using the right mouse button “up” the render window (makes the widget bigger) or “down” the render window (makes the widget smaller). To rotate vtkBoxWidget, pick a face (but not a face handle) and move the left mouse. (Note: the mouse button must be held down during manipulation.) Events that occur outside of the widget (i.e., no part of the widget is picked) are propagated to any other registered obsevers (such as the interaction style). Turn off the widget by pressing the “i” key again. (See the superclass documentation on key press activiation.)&amp;gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;The vtkBoxWidget is very flexible. It can be used to select, cut, clip, or perform any other operation that depends on an implicit function (use the GetPlanes() method); or it can be used to transform objects using a linear transformation (use the GetTransform() method). Typical usage of the widget is to make use of the StartInteractionEvent, InteractionEvent, and EndInteractionEvent events. The InteractionEvent is called on mouse motion; the other two events are called on button down and button up (either left or right button).&amp;gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;Some additional features of this class include the ability to control the rendered properties of the widget. You can set the properties of the selected and unselected representations of the parts of the widget. For example, you can set the property for the handles, faces, and outline in their normal and selected states.&amp;gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;The box widget can be oriented by specifying a transformation matrix. This transformation is applied to the initial bounding box as defined by the PlaceWidget() method. DO NOT ASSUME that the transformation is applied to a unit box centered at the origin; this is wrong!&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;h2 id=&quot;section&quot;&gt;结语&lt;/h2&gt;
+    &lt;p&gt;以上就是VTK自带的六个教程，基本上涵盖VTK的基础使用。大家也能感觉到这六个案例还是比较废柴的，到最后也就只是使用了一个Widget。所以，后面我们会继续学习更深入的内容。Stay tuned!&lt;/p&gt;
+
+  &lt;/div&gt;&lt;/div&gt;
+</description>
+				<guid isPermaLink="true">https://longqi.ga/vtk/vtk-notes2/</guid>
+			</item>
+		
+			<item>
+				<title>VTK学习笔记（一）</title>
+				<link>https://longqi.ga/vtk/vtk-notes1/</link>
+				<pubDate>Sat, 22 Apr 2017 16:16:04 +0800</pubDate>
+				<description>
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;medium-4 medium-push-8 columns&quot;&gt;
+    &lt;div class=&quot;panel radius&quot;&gt;
+      &lt;p id=&quot;toc&quot;&gt;&lt;strong&gt;目录&lt;/strong&gt;&lt;/p&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#section&quot; id=&quot;markdown-toc-section&quot;&gt;背景&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#vtk&quot; id=&quot;markdown-toc-vtk&quot;&gt;VTK的基本流程&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#vtk-1&quot; id=&quot;markdown-toc-vtk-1&quot;&gt;VTK教程一：显示一个圆锥&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#vtkobserver&quot; id=&quot;markdown-toc-vtkobserver&quot;&gt;VTK教程二：添加Observer&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#vtk-2&quot; id=&quot;markdown-toc-vtk-2&quot;&gt;VTK教程三：同时显然多个对象&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#vtkactors&quot; id=&quot;markdown-toc-vtkactors&quot;&gt;VTK教程四：添加多个Actors&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+      &lt;hr /&gt;
+
+      &lt;aside&gt;
+	&lt;div class=&quot;panel radius&quot; id=&quot;sidebar-quote&quot;&gt;
+		&lt;h3&gt;庄子·养生主&lt;/h3&gt;
+		&lt;p&gt;
+		吾生也有涯，而知也无涯。以有涯隨无涯，殆已；已而為知者，殆而已矣。為善无近名，為惡無近刑。緣督以為經，可以保身，可以全生，可以養親，可以盡年。
+		&lt;/p&gt;
+	&lt;/div&gt;
+&lt;!-- 
+  &lt;img class=&quot;b30&quot; src=&quot;/images/bear-300x300.jpg&quot; alt=&quot;&quot;&gt;
+	&lt;div class=&quot;border-dotted radius b30&quot;&gt;
+		&lt;a href=&quot;//whyhow.tk&quot;&gt;&lt;img src=&quot;//www.whyhow.tk/public/logo.svg&quot; alt=&quot;姐妹站点&quot;&gt;&lt;/a&gt;
+		&lt;p class=&quot;text-left&quot;&gt;
+			这是本站的&lt;a href=&quot;//whyhow.tk&quot;&gt;姐妹站点&lt;/a&gt;，热烈欢迎大家光临！
+		&lt;/p&gt;
+	&lt;/div&gt; --&gt;
+&lt;/aside&gt;
+
+    &lt;/div&gt;
+  &lt;/div&gt;&lt;!-- /.medium-4.columns --&gt;
+
+
+
+&lt;div class=&quot;medium-8 medium-pull-4 columns&quot;&gt;
+
+    &lt;h2 id=&quot;section&quot;&gt;背景&lt;/h2&gt;
+    &lt;p&gt;背景不做介绍了，VTK是非常有名的可视化工具箱，具体可到VTK的官网查询。下面是官网对自己的简要介绍：&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;VTK is an open-source software system for image processing, 3D
+graphics, volume rendering and visualization. VTK includes many
+advanced algorithms (e.g., surface reconstruction, implicit modelling,
+decimation) and rendering techniques (e.g., hardware-accelerated
+volume rendering, LOD control).&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;p&gt;VTK可以运行在诸多环境下，从Windows, Linux 到 iOS, Android都可以运行，这点应该还是非常吸引人的。&lt;/p&gt;
+
+    &lt;h2 id=&quot;vtk&quot;&gt;VTK的基本流程&lt;/h2&gt;
+    &lt;p&gt;VTK的渲染流程如下：&lt;/p&gt;
+
+    &lt;p&gt;source -&amp;gt; mapper -&amp;gt; actor -&amp;gt; renderer -&amp;gt; renderwindow&lt;/p&gt;
+
+    &lt;p&gt;所以一个基本的VTK程序会比其他可视化库来得复杂。&lt;/p&gt;
+
+    &lt;p&gt;VTK通过Pipeline实现不同的可视化，这需要用到大量的filter和mapper。&lt;/p&gt;
+
+    &lt;div class=&quot;alert-box warning &quot;&gt;&lt;p&gt;自6.0开始VTK的data object和pipeline彻底分离了，这个将导致6.0以前的代码出现兼容性问题。&lt;/p&gt;
+&lt;/div&gt;
+
+    &lt;p&gt;VTK自带一些简单的教程，讲解了关于VTK的一些基本操作。我们这里简单的过一遍，到六个案例都过完之后大家会发现其实这个教程的质量&lt;em&gt;并不很好&lt;/em&gt;。这是因为这六个案例过完之后你了解的仅仅是VTK的一些皮毛，当然你大概知道了VTK的流程，但是VTK之所以被叫做VTK的可视化功能的核心在这六个案例里完全没有提到。不过古话说得好：&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;千里之行 始于足下&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;p&gt;我们花两个网页的篇幅简单的过一下这六个案例，在案例代码中我添加了一些评注，希望有点帮助。&lt;/p&gt;
+
+    &lt;h2 id=&quot;vtk-1&quot;&gt;VTK教程一：显示一个圆锥&lt;/h2&gt;
+    &lt;p&gt;下面引用VTK教程里面的第一个案例（略微添加了一些注释）：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# This example creates a polygonal model of a cone, and then renders it to&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# the screen. It will rotate the cone 360 degrees and then exit. The basic&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# setup of source -&amp;gt; mapper -&amp;gt; actor -&amp;gt; renderer -&amp;gt; renderwindow is&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# typical of most VTK programs.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 这个案例建立一个圆锥，然后在屏幕上渲染它，并旋转360度。&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# First we include the VTK Python packages that will make available&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# all of the VTK commands to Python.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;vtk&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;time&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Next we create an instance of vtkConeSource and set some of its&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# properties. The instance of vtkConeSource &quot;cone&quot; is part of a visualization&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# pipeline (it is a source process object); it produces data (output type is&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkPolyData) which other filters may process.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 案例使用内嵌的ConSource生成圆锥&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkConeSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetRadius&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetResolution&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# In this example we terminate the pipeline with a mapper process object.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# (Intermediate filters such as vtkShrinkPolyData could be inserted in&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# between the source and the mapper.)  We create an instance of&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkPolyDataMapper to map the polygonal data into graphics primitives. We&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# connect the output of the cone souece to the input of this mapper.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 这里讲这个算例没有添加filter&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkPolyDataMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetInputConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetOutputPort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Create an actor to represent the cone. The actor orchestrates rendering of&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# the mapper's graphics primitives. An actor also refers to properties via a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkProperty instance, and includes an internal transformation matrix. We&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# set this actor's mapper to be coneMapper which we created above.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 这里讲Actor可以用来修改属性和包含一个变换矩阵&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Create the Renderer and assign actors to it. A renderer is like a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# viewport. It is part or all of a window on the screen and it is&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# responsible for drawing the actors it has.  We also set the background&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# color here&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# renderer类似于其他软件里的viewport，可以设置一些背景之类的属性。&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetBackground&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Finally we create the render window which will show up on the screen&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# We put our renderer into the render window using AddRenderer. We also&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# set the size to be 300 pixels by 300&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 这个是建立渲染窗口，大小为300x300&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# now we loop over 360 degreeees and render the cone each time&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 这个是旋转360度&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;360&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.03&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetActiveCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Azimuth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;h2 id=&quot;vtkobserver&quot;&gt;VTK教程二：添加Observer&lt;/h2&gt;
+
+    &lt;p&gt;教程二介绍了observer，相当于其他软件里面的Event Handler。下面是教程二的代码，新内容很少：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# This example shows how to add an observer to a Python program. It extends&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# the Step1/Python/Cone.py Python example (see that example for information on&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# the basic setup).&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# VTK uses a command/observer design pattern. That is, observers watch for&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# particular events that any vtkObject (or subclass) may invoke on&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# itself. For example, the vtkRenderer invokes a &quot;StartEvent&quot; as it begins&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# to render. Here we add an observer that invokes a command when this event&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# is observed.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 这一部分主要介绍observer，相当于eventhandler，会去监控event。&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;__future__&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;print_function&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;vtk&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;time&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# define the callback&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;myCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Starting a render&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# create the basic pipeline as in Step1&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkConeSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetRadius&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetResolution&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkPolyDataMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetInputConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetOutputPort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetBackground&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Add the observer here&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# observer是添加在render上面的，监控的也是render的event&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddObserver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;StartEvent&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;myCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# now we loop over 360 degreeees and render the cone each time&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;360&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.03&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetActiveCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Azimuth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;h2 id=&quot;vtk-2&quot;&gt;VTK教程三：同时显然多个对象&lt;/h2&gt;
+    &lt;p&gt;教程三主要解决多个render的问题，这样可以在一个窗口里添加多个render。属于一个比较重要的功能。下面是教程三的代码：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# This example demonstrates how to use multiple renderers within a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# render window. It is a variation of the Cone.py example. Please&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# refer to that example for additional documentation.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 可视化内容还是基于教程一&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;vtk&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;time&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Next we create an instance of vtkConeSource and set some of its&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# properties. The instance of vtkConeSource &quot;cone&quot; is part of a visualization&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# pipeline (it is a source process object); it produces data (output type is&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkPolyData) which other filters may process.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 产生一个圆锥对象，这个对象会在后面多次用到，这也说明VTK里一个对象是可以被多次按照&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 不同方式render的&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkConeSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetRadius&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetResolution&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# In this example we terminate the pipeline with a mapper process object.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# (Intermediate filters such as vtkShrinkPolyData could be inserted in&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# between the source and the mapper.)  We create an instance of&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkPolyDataMapper to map the polygonal data into graphics primitives. We&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# connect the output of the cone souece to the input of this mapper.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkPolyDataMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetInputConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetOutputPort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Create an actor to represent the cone. The actor orchestrates rendering of&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# the mapper's graphics primitives. An actor also refers to properties via a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkProperty instance, and includes an internal transformation matrix. We&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# set this actor's mapper to be coneMapper which we created above.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 到这里都只有一个对象&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Create two renderers and assign actors to them. A renderer renders into a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# viewport within the vtkRenderWindow. It is part or all of a window on the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# screen and it is responsible for drawing the actors it has.  We also set&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# the background color here. In this example we are adding the same actor&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# to two different renderers; it is okay to add different actors to&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# different renderers as well.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 将一个actor给了两个render，其中的SetViewport函数&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Specify the viewport for the Viewport to draw in the rendering window.#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Coordinates are expressed as (xmin,ymin,xmax,ymax), where each coordinate is 0 &amp;lt;= coordinate &amp;lt;= 1.0.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 注意到这里并没有旋转对象&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetBackground&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetViewport&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ren2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetBackground&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetViewport&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Finally we create the render window which will show up on the screen.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# We add our two renderers into the render window using AddRenderer. We also&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# set the size to be 600 pixels by 300.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ren2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;600&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Make one camera view 90 degrees from other.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 旋转对象是在这里完成的&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ResetCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetActiveCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Azimuth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;90&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Now we loop over 360 degreeees and render the cone each time.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;360&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.03&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetActiveCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Azimuth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ren2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetActiveCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Azimuth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;h2 id=&quot;vtkactors&quot;&gt;VTK教程四：添加多个Actors&lt;/h2&gt;
+
+    &lt;p&gt;上一个案例里同时显示了两个一样的圆锥，可以通过Actor修改圆锥的属性获得不同的渲染结果。这就是下面这个案例的目的。下面是第四个案例的代码：&lt;/p&gt;
+
+    &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# This example demonstrates the creation of multiple actors and the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# manipulation of their properties and transformations. It is a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# derivative of Cone.py, see that example for more information.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;vtk&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;time&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Next we create an instance of vtkConeSource and set some of its&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# properties. The instance of vtkConeSource &quot;cone&quot; is part of a visualization&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# pipeline (it is a source process object); it produces data (output type is&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkPolyData) which other filters may process.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 还是一个对象&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkConeSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetRadius&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetResolution&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# In this example we terminate the pipeline with a mapper process object.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# (Intermediate filters such as vtkShrinkPolyData could be inserted in&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# between the source and the mapper.)  We create an instance of&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkPolyDataMapper to map the polygonal data into graphics primitives. We&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# connect the output of the cone source to the input of this mapper.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkPolyDataMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetInputConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetOutputPort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Create an actor to represent the first cone. The actor's properties are&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# modified to give it different surface properties. By default, an actor&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# is create with a property so the GetProperty() method can be used.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 此处设计很逆天，需要注意：&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# vtkProperty* vtkActor::GetProperty  ()&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Set/Get the property object that controls this actors surface properties.#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# This should be an instance of a vtkProperty object. Every actor must have a property associated with it. If one isn't specified, then one will be generated automatically. Multiple actors can share one property object.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 设置属性的第一步是 GetProperty，也有一个函数叫SetProperty，不过是用来直接使用Property对象设置的，后面会用到：&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# void vtkActor::SetProperty  (   vtkProperty *   lut )&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Set/Get the property object that controls this actors surface properties.#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# This should be an instance of a vtkProperty object. Every actor must have a property associated with it. If one isn't specified, then one will be generated automatically. Multiple actors can share one property object.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.63&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.79&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetDiffuse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetSpecular&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetSpecularPower&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Create a property and directly manipulate it. Assign it to the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# second actor.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 新建一个Property对象&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;property&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;property&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.3882&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.2784&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;property&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetDiffuse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;property&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetSpecular&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;property&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetSpecularPower&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Create a second actor and a property. The property is directly&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# manipulated and then assigned to the actor. In this way, a single&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# property can be shared among many actors. Note also that we use the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# same mapper as the first actor did. This way we avoid duplicating&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# geometry, which may save lots of memory if the geoemtry is large.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 这个地方强调了使用的是同一个mapper可以省内存&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.63&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.79&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;property&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coneActor2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetPosition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Create the Renderer and assign actors to it. A renderer is like a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# viewport. It is part or all of a window on the screen and it is responsible&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# for drawing the actors it has.  We also set the background color here.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 注意，这个算例没有使用两个actors，仅有一个viewport，而是直接使用SetPosition将两个对象分开，viewport是一个。&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddActor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coneActor2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetBackground&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Finally we create the render window which will show up on the screen&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# We put our renderer into the render window using AddRenderer. We also&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# set the size to be 300 pixels by 300.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vtk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vtkRenderWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Now we loop over 360 degreeees and render the cone each time.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;360&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.03&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;renWin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ren1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetActiveCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Azimuth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+    &lt;p&gt;&lt;strong&gt;控制页面长度，此处分割。&lt;/strong&gt;&lt;/p&gt;
+  &lt;/div&gt;&lt;/div&gt;
+</description>
+				<guid isPermaLink="true">https://longqi.ga/vtk/vtk-notes1/</guid>
+			</item>
+		
+			<item>
 				<title>WHYHOW系列之json文件处理</title>
 				<link>https://longqi.ga/whyhow/whyhow.jsonlite/</link>
 				<pubDate>Sun, 16 Apr 2017 10:51:03 +0800</pubDate>

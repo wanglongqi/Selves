@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<!-- Pages: 19 links with priority=0.3, changefreq=monthly -->
+<!-- Pages: 20 links with priority=0.3, changefreq=monthly -->
 
 	
 	<url>
 	<loc>https://longqi.ga/404.html</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -22,7 +22,7 @@
 	<url>
 	<loc>https://longqi.ga/blog/archive/</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -39,7 +39,7 @@
 	<url>
 	<loc>https://longqi.ga/atom.xml</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -56,7 +56,7 @@
 	<url>
 	<loc>https://longqi.ga/contact/</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -71,7 +71,7 @@
 	<url>
 	<loc>https://longqi.ga/feed.xml</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -86,7 +86,7 @@
 	<url>
 	<loc>https://longqi.ga/blog/</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -101,7 +101,7 @@
 	<url>
 	<loc>https://longqi.ga/</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -116,7 +116,7 @@
 	<url>
 	<loc>https://longqi.ga/info/</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -131,7 +131,7 @@
 	<url>
 	<loc>https://longqi.ga/projects/</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -146,7 +146,7 @@
 	<url>
 	<loc>https://longqi.ga/redirect-page/</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -161,7 +161,7 @@
 	<url>
 	<loc>https://longqi.ga/robots.txt</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -180,7 +180,7 @@
 	<url>
 	<loc>https://longqi.ga/search/</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -195,7 +195,7 @@
 	<url>
 	<loc>https://longqi.ga/sitemap.xml</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -212,7 +212,22 @@
 	<url>
 	<loc>https://longqi.ga/writetex</loc>
 	
-		<lastmod>2017-04-17T19:57:22+08:00</lastmod>
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.3</priority>
+	
+	</url>
+	
+
+	
+	<url>
+	<loc>https://longqi.ga/blog/page2/</loc>
+	
+		<lastmod>2017-04-27T13:46:31+08:00</lastmod>
 	
 	
 		<changefreq>monthly</changefreq>
@@ -224,7 +239,37 @@
 	
 
 
-<!-- Posts: 4 links with priority=0.5, changefreq=monthly -->
+<!-- Posts: 6 links with priority=0.5, changefreq=monthly -->
+
+	
+	<url>
+	<loc>https://longqi.ga/vtk/vtk-notes2/</loc>
+	
+		<lastmod>2017-04-22T20:20:08+08:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.5</priority>
+	
+	</url>
+	
+
+	
+	<url>
+	<loc>https://longqi.ga/vtk/vtk-notes1/</loc>
+	
+		<lastmod>2017-04-22T16:16:04+08:00</lastmod>
+	
+	
+		<changefreq>monthly</changefreq>
+	
+	
+		<priority>0.5</priority>
+	
+	</url>
+	
 
 	
 	<url>
