@@ -9,6 +9,26 @@
 		<atom:link href="https://longqi.ga/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>WriteTeX 1.6.1版发布</title>
+				<link>https://longqi.ga/writetex/writetex-1.6.1/</link>
+				<pubDate>Mon, 11 Sep 2017 15:57:23 +0800</pubDate>
+				<description>&lt;h2 id=&quot;161版writetex发布&quot;&gt;1.6.1版WriteTeX发布&lt;/h2&gt;
+
+&lt;p&gt;本次更新移除了&lt;code class=&quot;highlighter-rouge&quot;&gt;pdfcrop&lt;/code&gt;的依赖，详见下文。&lt;/p&gt;
+
+&lt;h2 id=&quot;100版的重大bug&quot;&gt;1.0.0版的重大BUG&lt;/h2&gt;
+&lt;p&gt;前一段时间WriteTeX有了一个重大更新，由于时间比较紧张，一直也没有发文介绍。关注WriteTeX的读者应该知道将WriteTeX推向1.0.0版的主要更新是加入了Crop的功能，这个功能是自WriteTeX初始设计以来一直放在TODO列表的功能。最开始的时候一直寄希望于使用&lt;code class=&quot;highlighter-rouge&quot;&gt;pdfcrop&lt;/code&gt;完成这一工作，而实际上在适当的运行环境下&lt;code class=&quot;highlighter-rouge&quot;&gt;pdfcrop&lt;/code&gt;确实可以正常地工作，由此，基于&lt;code class=&quot;highlighter-rouge&quot;&gt;pdfcrop&lt;/code&gt;，WirteTeX推出了其1.0.0., 然而很快就有用户反应代码在各种操作环境下不能正常运行，而大家都没法确定问题所在。一些怀疑包括perl处理path的机制和shell不一样，或者glibc处理path的机制和shell不一样，似乎都很难解决。这次更新反而成为了一个不稳定的发行版。&lt;/p&gt;
+
+&lt;h2 id=&quot;移除pdfcrop依赖&quot;&gt;移除&lt;code class=&quot;highlighter-rouge&quot;&gt;pdfcrop&lt;/code&gt;依赖&lt;/h2&gt;
+&lt;p&gt;因此，我一直想将&lt;code class=&quot;highlighter-rouge&quot;&gt;pdfcrop&lt;/code&gt;从项目中移除，一个可行的方案是自己计算svg的extent。这需要对svg的结构比较熟悉，所以一直没有着手实施。前些天，在试图实现extent算法的过程中，我突然意识到可能不需要一个完整的extent算法。因为读入的svg的内容是在插件内构建的，所以原则上讲，读入的svg格式是在插件的控制范围内。因此，我可以只需要实现一个很小的子集就可以实现确定svg的extent的功能（实际上，对于&lt;code class=&quot;highlighter-rouge&quot;&gt;pdf2svg&lt;/code&gt;的结果我仅仅需要实现&lt;code class=&quot;highlighter-rouge&quot;&gt;translate&lt;/code&gt;变换的计算功能）。因此，我就实现了一个对应与&lt;code class=&quot;highlighter-rouge&quot;&gt;pdf2svg&lt;/code&gt;的读入功能的extent计算代码，现在看起来工作得很好。欢迎大家测试，测试时请认准1.6.1版本，之前的版本都没有解决这个问题，同时PDFTOSVG的转换器必须是&lt;code class=&quot;highlighter-rouge&quot;&gt;pdf2svg&lt;/code&gt;。我不是很想支持&lt;code class=&quot;highlighter-rouge&quot;&gt;pdftoedit&lt;/code&gt;了，有兴趣的读者可以参照&lt;code class=&quot;highlighter-rouge&quot;&gt;pdf2svg&lt;/code&gt;的实现方法实现&lt;code class=&quot;highlighter-rouge&quot;&gt;pdftoedit&lt;/code&gt;的相关功能。&lt;/p&gt;
+
+&lt;p&gt;另外，&lt;code class=&quot;highlighter-rouge&quot;&gt;pdf2svg&lt;/code&gt;的extent算法可能可以简化一下，现在的svg结构是两重变换，先变小又变大，凭空增大了一些计算量。有兴趣的读者也可以优化一下。&lt;/p&gt;
+
+</description>
+				<guid isPermaLink="true">https://longqi.ga/writetex/writetex-1.6.1/</guid>
+			</item>
+		
+			<item>
 				<title>VTK学习笔记（二）</title>
 				<link>https://longqi.ga/vtk/vtk-notes2/</link>
 				<pubDate>Sat, 22 Apr 2017 20:20:08 +0800</pubDate>
