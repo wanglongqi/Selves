@@ -283,18 +283,60 @@
 			
 
 			<div itemprop="articleSection">
-			<h2 id="161版writetex发布">1.6.1版WriteTeX发布</h2>
+			
+<div class="row">
+<div class="medium-4 medium-push-8 columns">
+    <div class="panel radius">
+      <p id="toc"><strong>目录</strong></p>
+<ul id="markdown-toc">
+  <li><a href="#writetex" id="markdown-toc-writetex">1.6.1版WriteTeX发布</a></li>
+  <li><a href="#bug" id="markdown-toc-bug">1.0.0版的重大BUG</a></li>
+  <li><a href="#pdfcrop" id="markdown-toc-pdfcrop">移除pdfcrop依赖</a></li>
+</ul>
+      <hr />
 
-<p>本次更新移除了<code class="highlighter-rouge">pdfcrop</code>的依赖，详见下文。</p>
+      <aside>
+	<div class="panel radius" id="sidebar-quote">
+		<h3>庄子·养生主</h3>
+		<p>
+		吾生也有涯，而知也无涯。以有涯隨无涯，殆已；已而為知者，殆而已矣。為善无近名，為惡無近刑。緣督以為經，可以保身，可以全生，可以養親，可以盡年。
+		</p>
+	</div>
+<!-- 
+  <img class="b30" src="/images/bear-300x300.jpg" alt="">
+	<div class="border-dotted radius b30">
+		<a href="//whyhow.tk"><img src="//www.whyhow.tk/public/logo.svg" alt="姐妹站点"></a>
+		<p class="text-left">
+			这是本站的<a href="//whyhow.tk">姐妹站点</a>，热烈欢迎大家光临！
+		</p>
+	</div> -->
+</aside>
 
-<h2 id="100版的重大bug">1.0.0版的重大BUG</h2>
-<p>前一段时间WriteTeX有了一个重大更新，由于时间比较紧张，一直也没有发文介绍。关注WriteTeX的读者应该知道将WriteTeX推向1.0.0版的主要更新是加入了Crop的功能，这个功能是自WriteTeX初始设计以来一直放在TODO列表的功能。最开始的时候一直寄希望于使用<code class="highlighter-rouge">pdfcrop</code>完成这一工作，而实际上在适当的运行环境下<code class="highlighter-rouge">pdfcrop</code>确实可以正常地工作，由此，基于<code class="highlighter-rouge">pdfcrop</code>，WirteTeX推出了其1.0.0., 然而很快就有用户反应代码在各种操作环境下不能正常运行，而大家都没法确定问题所在。一些怀疑包括perl处理path的机制和shell不一样，或者glibc处理path的机制和shell不一样，似乎都很难解决。这次更新反而成为了一个不稳定的发行版。</p>
+    </div>
+  </div><!-- /.medium-4.columns -->
 
-<h2 id="移除pdfcrop依赖">移除<code class="highlighter-rouge">pdfcrop</code>依赖</h2>
-<p>因此，我一直想将<code class="highlighter-rouge">pdfcrop</code>从项目中移除，一个可行的方案是自己计算svg的extent。这需要对svg的结构比较熟悉，所以一直没有着手实施。前些天，在试图实现extent算法的过程中，我突然意识到可能不需要一个完整的extent算法。因为读入的svg的内容是在插件内构建的，所以原则上讲，读入的svg格式是在插件的控制范围内。因此，我可以只需要实现一个很小的子集就可以实现确定svg的extent的功能（实际上，对于<code class="highlighter-rouge">pdf2svg</code>的结果我仅仅需要实现<code class="highlighter-rouge">translate</code>变换的计算功能）。因此，我就实现了一个对应与<code class="highlighter-rouge">pdf2svg</code>的读入功能的extent计算代码，现在看起来工作得很好。欢迎大家测试，测试时请认准1.6.1版本，之前的版本都没有解决这个问题，同时PDFTOSVG的转换器必须是<code class="highlighter-rouge">pdf2svg</code>。我不是很想支持<code class="highlighter-rouge">pdftoedit</code>了，有兴趣的读者可以参照<code class="highlighter-rouge">pdf2svg</code>的实现方法实现<code class="highlighter-rouge">pdftoedit</code>的相关功能。</p>
 
-<p>另外，<code class="highlighter-rouge">pdf2svg</code>的extent算法可能可以简化一下，现在的svg结构是两重变换，先变小又变大，凭空增大了一些计算量。有兴趣的读者也可以优化一下。</p>
 
+<div class="medium-8 medium-pull-4 columns">
+
+    <h2 id="writetex">1.6.1版WriteTeX发布</h2>
+
+    <p>大家可到<a href="https://github.com/wanglongqi/WriteTeX/releases/latest">这里下载</a>，这次更新的主要内容包括：</p>
+
+    <ol>
+      <li>移除了<code class="highlighter-rouge">pdfcrop</code>的依赖，详见下文。</li>
+      <li>更新了Mac OSX版的<code class="highlighter-rouge">pdf2svg</code>二进制文件。</li>
+    </ol>
+
+    <h2 id="bug">1.0.0版的重大BUG</h2>
+    <p>前一段时间WriteTeX有了一个重大更新，由于时间比较紧张，一直也没有发文介绍。关注WriteTeX的读者应该知道将WriteTeX推向1.0.0版的主要更新是加入了Crop的功能，这个功能是自WriteTeX初始设计以来一直放在TODO列表的功能。最开始的时候一直寄希望于使用<code class="highlighter-rouge">pdfcrop</code>完成这一工作，而实际上在适当的运行环境下<code class="highlighter-rouge">pdfcrop</code>确实可以正常地工作，由此，基于<code class="highlighter-rouge">pdfcrop</code>，WirteTeX推出了其1.0.0., 然而很快就有用户反应代码在各种操作环境下不能正常运行，而大家都没法确定问题所在。一些怀疑包括perl处理path的机制和shell不一样，或者glibc处理path的机制和shell不一样，似乎都很难解决。这次更新反而成为了一个不稳定的发行版。</p>
+
+    <h2 id="pdfcrop">移除pdfcrop依赖</h2>
+    <p>因此，我一直想将<code class="highlighter-rouge">pdfcrop</code>从项目中移除，一个可行的方案是自己计算svg的extent。这需要对svg的结构比较熟悉，所以一直没有着手实施。前些天，在试图实现extent算法的过程中，我突然意识到可能不需要一个完整的extent算法。因为读入的svg的内容是在插件内构建的，所以原则上讲，读入的svg格式是在插件的控制范围内。因此，我可以只需要实现一个很小的子集就可以实现确定svg的extent的功能（实际上，对于<code class="highlighter-rouge">pdf2svg</code>的结果我仅仅需要实现<code class="highlighter-rouge">translate</code>变换的计算功能）。因此，我就实现了一个对应与<code class="highlighter-rouge">pdf2svg</code>的读入功能的extent计算代码，现在看起来工作得很好。欢迎大家测试，测试时请认准1.6.1版本，之前的版本都没有解决这个问题，同时PDFTOSVG的转换器必须是<code class="highlighter-rouge">pdf2svg</code>。我不是很想支持<code class="highlighter-rouge">pdftoedit</code>了，有兴趣的读者可以参照<code class="highlighter-rouge">pdf2svg</code>的实现方法实现<code class="highlighter-rouge">pdftoedit</code>的相关功能。</p>
+
+    <p>另外，<code class="highlighter-rouge">pdf2svg</code>的extent算法可能可以简化一下，现在的svg结构是两重变换，先变小又变大，凭空增大了一些计算量。有兴趣的读者也可以优化一下。</p>
+
+  </div></div>
 
 <!-- 	it seems jekyll will auto close the div	</div>
 				</div> -->
